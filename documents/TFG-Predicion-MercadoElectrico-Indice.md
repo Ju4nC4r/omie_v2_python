@@ -7,6 +7,7 @@
 - [Capitulo 1. Resumen](capitulo_01_resumen.md)
 - [Capitulo 2. Introduccion](capitulo_02_introduccion.md)
 - [Capitulo 3. Objetivos](capitulo_03_objetivos.md)
+- [Capitulo 4. Marco teorico](capitulo_04_marco_teorico.md)
 
 > Nota: a medida que se desarrollen nuevos capitulos, se anadiran enlaces a sus ficheros Markdown correspondientes.
 
@@ -34,7 +35,7 @@
 3.4. Requisitos no funcionales  
 3.5. Limitaciones iniciales  
 
-### 4. Marco teorico _(pendiente de desarrollar)_
+### [4. Marco teorico](capitulo_04_marco_teorico.md)
 
 4.1. Funcionamiento del mercado electrico espanol  
 4.2. Mercado diario e intradiario  
