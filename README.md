@@ -161,21 +161,133 @@ python -m omie_price_nn.predict
 
 ## 🧠 Modelos disponibles
 
-### `ridge`
+El proyecto permite elegir entre cuatro opciones de entrenamiento. Tres son modelos concretos y una (`auto`) es un modo de seleccion automatica.
 
-`RidgeCV` es una regresion lineal regularizada. Es rapida, estable y suele funcionar bien cuando las variables historicas explican una parte importante del precio.
+| Opcion | Tipo | Cuándo usarla |
+|---|---|---|
+| `auto` | Selector automatico | Recomendado para empezar. Prueba todos y guarda el mejor por `MAE`. |
+| `ridge` | Regresion lineal regularizada | Buena opcion rapida, estable e interpretable. |
+| `mlp` | Red neuronal densa | Util para probar relaciones no lineales con una red sencilla. |
+| `hist_gradient_boosting` | Arboles con boosting | Bueno para capturar no linealidades y cambios bruscos. |
 
-### `mlp`
+### 🤖 `auto`
 
-`MLPRegressor` es una red neuronal sencilla con capas densas. Puede aprender relaciones no lineales, aunque necesita suficientes datos y puede tardar mas en entrenar.
+`auto` no es un modelo en si, sino un modo de entrenamiento. Ejecuta los tres candidatos (`ridge`, `mlp` y `hist_gradient_boosting`), calcula metricas sobre el tramo de validacion temporal y guarda el que obtiene menor `MAE`.
 
-### `hist_gradient_boosting`
+Es la opcion mas comoda cuando no sabes aun que modelo ira mejor para un rango de fechas concreto.
 
-`HistGradientBoostingRegressor` es un modelo de arboles con boosting. Suele capturar no linealidades y cambios de regimen mejor que una regresion lineal simple.
+Ventajas:
 
-### `auto`
+- compara modelos con el mismo dataset
+- evita elegir a mano antes de medir
+- guarda automaticamente el mejor candidato
+- muestra las metricas de todos los modelos entrenados
 
-Entrena los tres candidatos, compara el `MAE` en validacion temporal y guarda el mejor.
+Inconvenientes:
+
+- tarda mas porque entrena tres modelos
+- el modelo elegido puede cambiar si cambias el rango de fechas
+- no sustituye a una validacion mas profunda por meses, estaciones o anos
+
+Ejemplo:
+
+```bash
+omie-price-train --start 2025-01-01 --end 2025-03-31 --model auto
+```
+
+### 📐 `ridge`
+
+`ridge` usa `RidgeCV`, una regresion lineal con regularizacion L2. En palabras simples: intenta explicar el precio como una combinacion ponderada de las variables disponibles, pero evita que los pesos crezcan demasiado. Eso ayuda a reducir sobreajuste.
+
+En este proyecto suele ser fuerte porque muchas variables ya resumen muy bien la historia reciente del precio: retardos, medias moviles, diferencias y ciclos de calendario.
+
+Ventajas:
+
+- muy rapido de entrenar
+- estable con datasets medianos
+- menos propenso a sobreajustar que una regresion lineal normal
+- buena baseline seria para series temporales con muchas variables historicas
+
+Inconvenientes:
+
+- aprende relaciones principalmente lineales
+- puede quedarse corto ante cambios de regimen o patrones muy no lineales
+- depende mucho de que las variables creadas sean buenas
+
+Ejemplo:
+
+```bash
+omie-price-train --start 2025-01-01 --end 2025-03-31 --model ridge
+```
+
+### 🧠 `mlp`
+
+`mlp` usa `MLPRegressor`, una red neuronal feed-forward sencilla. En este proyecto tiene capas densas y aprende a combinar las variables historicas para aproximar el precio.
+
+Es el modelo mas cercano a la idea inicial de "red neuronal". Puede aprender relaciones no lineales, por ejemplo interacciones entre hora del dia, precio del dia anterior y volatilidad reciente.
+
+Ventajas:
+
+- puede capturar relaciones no lineales
+- permite experimentar con arquitectura neuronal sencilla
+- puede mejorar si se anaden mas datos y variables externas
+
+Inconvenientes:
+
+- tarda mas que `ridge`
+- puede ser mas sensible a escalado, ruido y rango de fechas
+- necesita suficientes datos para generalizar bien
+- sus resultados pueden ser menos interpretables
+
+Ejemplo:
+
+```bash
+omie-price-train --start 2025-01-01 --end 2025-03-31 --model mlp
+```
+
+### 🌲 `hist_gradient_boosting`
+
+`hist_gradient_boosting` usa `HistGradientBoostingRegressor`, un modelo basado en arboles de decision entrenados de forma secuencial. Cada arbol intenta corregir errores cometidos por los anteriores.
+
+Es util cuando hay relaciones no lineales, umbrales o cambios bruscos. Por ejemplo, puede aprender comportamientos distintos para fines de semana, horas valle, horas punta o situaciones de alta volatilidad.
+
+Ventajas:
+
+- captura no linealidades sin necesitar mucho preprocesado
+- suele funcionar bien con variables tabulares
+- puede detectar interacciones entre variables
+- es competitivo como modelo practico de machine learning clasico
+
+Inconvenientes:
+
+- menos interpretable que `ridge`
+- puede sobreajustar si se aumenta demasiado la complejidad
+- no extrapola tendencias lineales tan naturalmente como una regresion
+- puede necesitar ajuste fino de hiperparametros
+
+Ejemplo:
+
+```bash
+omie-price-train --start 2025-01-01 --end 2025-03-31 --model hist_gradient_boosting
+```
+
+### 🧪 Comparacion recomendada
+
+Para comparar modelos de forma justa, usa el mismo rango de fechas:
+
+```bash
+omie-price-train --start 2025-01-01 --end 2025-03-31 --model ridge
+omie-price-train --start 2025-01-01 --end 2025-03-31 --model mlp
+omie-price-train --start 2025-01-01 --end 2025-03-31 --model hist_gradient_boosting
+```
+
+O deja que el proyecto lo haga automaticamente:
+
+```bash
+omie-price-train --start 2025-01-01 --end 2025-03-31 --model auto
+```
+
+En pruebas con datos reales de `2025-01-01` a `2025-03-31`, `ridge` fue el mejor de los tres por `MAE`, pero esto puede cambiar al usar otros anos, meses o datos externos.
 
 ## 📦 Datos de OMIE
 
