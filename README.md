@@ -82,7 +82,8 @@ Inferencia siguiente periodo
 Desde la carpeta del proyecto:
 
 ```bash
-cd /Users/juancarlos/temporal/kk
+mkdir  InferenceMEE
+cd InferenceMEE
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
