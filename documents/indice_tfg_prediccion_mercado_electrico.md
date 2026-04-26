@@ -2,7 +2,13 @@
 
 ## Prediccion del mercado electrico espanol mediante tecnicas de aprendizaje automatico
 
-### 1. Resumen
+## Capitulos desarrollados
+
+- [Capitulo 1. Resumen](capitulo_01_resumen.md)
+
+> Nota: a medida que se desarrollen nuevos capitulos, se anadiran enlaces a sus ficheros Markdown correspondientes.
+
+### [1. Resumen](capitulo_01_resumen.md)
 
 1.1. Contexto del mercado electrico espanol  
 1.2. Objetivo principal del trabajo  
@@ -10,7 +16,7 @@
 1.4. Resultados esperados  
 1.5. Aplicacion practica desarrollada  
 
-### 2. Introduccion
+### 2. Introduccion _(pendiente de desarrollar)_
 
 2.1. Motivacion del estudio  
 2.2. Importancia de la prediccion del precio electrico  
@@ -18,7 +24,7 @@
 2.4. Alcance del trabajo  
 2.5. Estructura del documento  
 
-### 3. Objetivos
+### 3. Objetivos _(pendiente de desarrollar)_
 
 3.1. Objetivo general  
 3.2. Objetivos especificos  
@@ -26,7 +32,7 @@
 3.4. Requisitos no funcionales  
 3.5. Limitaciones iniciales  
 
-### 4. Marco teorico
+### 4. Marco teorico _(pendiente de desarrollar)_
 
 4.1. Funcionamiento del mercado electrico espanol  
 4.2. Mercado diario e intradiario  
@@ -39,7 +45,7 @@
 4.9. Series temporales aplicadas a mercados electricos  
 4.10. Conceptos basicos de aprendizaje automatico supervisado  
 
-### 5. Estado del arte
+### 5. Estado del arte _(pendiente de desarrollar)_
 
 5.1. Modelos estadisticos clasicos para prediccion de precios  
 5.2. Modelos de machine learning aplicados a energia  
@@ -48,7 +54,7 @@
 5.5. Comparacion de enfoques existentes  
 5.6. Principales retos detectados en la literatura  
 
-### 6. Fuentes de datos
+### 6. Fuentes de datos _(pendiente de desarrollar)_
 
 6.1. Datos de precio del mercado diario OMIE  
 6.2. Formato de los ficheros `MARGINALPDBC`  
@@ -60,7 +66,7 @@
 6.8. Problemas de disponibilidad y calidad de datos  
 6.9. Estrategia de cache y almacenamiento local  
 
-### 7. Preparacion de datos
+### 7. Preparacion de datos _(pendiente de desarrollar)_
 
 7.1. Descarga automatizada de datos OMIE  
 7.2. Descarga opcional de datos ESIOS  
@@ -71,7 +77,7 @@
 7.7. Construccion del dataset supervisado  
 7.8. Separacion temporal entre entrenamiento y validacion  
 
-### 8. Ingenieria de variables
+### 8. Ingenieria de variables _(pendiente de desarrollar)_
 
 8.1. Variables de calendario  
 8.2. Variables ciclicas de hora, dia y mes  
@@ -84,7 +90,7 @@
 8.9. Variables externas de generacion renovable  
 8.10. Variables derivadas de eolica y solar  
 
-### 9. Modelos de prediccion
+### 9. Modelos de prediccion _(pendiente de desarrollar)_
 
 9.1. Modelo baseline `lag 24`  
 9.2. Regresion Ridge `RidgeCV`  
@@ -95,7 +101,7 @@
 9.7. Hiperparametros utilizados  
 9.8. Ventajas e inconvenientes de cada modelo  
 
-### 10. Metodologia de evaluacion
+### 10. Metodologia de evaluacion _(pendiente de desarrollar)_
 
 10.1. Validacion temporal  
 10.2. Evitar fuga de informacion futura  
@@ -106,7 +112,7 @@
 10.7. Analisis de errores  
 10.8. Evaluacion por rangos temporales  
 
-### 11. Diseno de la aplicacion practica
+### 11. Diseno de la aplicacion practica _(pendiente de desarrollar)_
 
 11.1. Arquitectura general del software  
 11.2. Modulos principales del proyecto  
@@ -117,7 +123,7 @@
 11.7. Configuracion del entorno Python  
 11.8. Control de versiones con Git  
 
-### 12. Implementacion del proyecto
+### 12. Implementacion del proyecto _(pendiente de desarrollar)_
 
 12.1. Estructura de directorios  
 12.2. Modulo de descarga y parseo de OMIE  
@@ -129,7 +135,7 @@
 12.8. Serializacion del modelo entrenado  
 12.9. Generacion de graficas de validacion  
 
-### 13. Aplicacion practica desarrollada
+### 13. Aplicacion practica desarrollada _(pendiente de desarrollar)_
 
 13.1. Descripcion general de la aplicacion  
 13.2. Objetivo de la aplicacion  
@@ -142,7 +148,7 @@
 13.9. Inferencia del siguiente periodo  
 13.10. Comparacion entre prediccion y valor real  
 
-### 14. Informacion concreta del proyecto implementado
+### 14. Informacion concreta del proyecto implementado _(pendiente de desarrollar)_
 
 14.1. Nombre del proyecto: `omie_v2_python`  
 14.2. Lenguaje utilizado: Python  
@@ -155,7 +161,7 @@
 14.9. Modelo guardado: `models/omie_model.joblib`  
 14.10. Grafica generada: `models/validation_plot.png`  
 
-### 15. Resultados experimentales
+### 15. Resultados experimentales _(pendiente de desarrollar)_
 
 15.1. Entrenamiento con datos de enero a marzo de 2025  
 15.2. Entrenamiento con datos de todo 2025  
@@ -166,7 +172,7 @@
 15.7. Caso practico: prediccion para `2026-01-01 00:00`  
 15.8. Comparacion con el valor real publicado por OMIE  
 
-### 16. Discusion
+### 16. Discusion _(pendiente de desarrollar)_
 
 16.1. Interpretacion de resultados  
 16.2. Influencia de la cantidad de datos historicos  
@@ -176,7 +182,7 @@
 16.6. Riesgos de sobreajuste  
 16.7. Robustez del sistema ante datos ausentes  
 
-### 17. Conclusiones
+### 17. Conclusiones _(pendiente de desarrollar)_
 
 17.1. Cumplimiento de objetivos  
 17.2. Principales aportaciones del trabajo  
@@ -184,7 +190,7 @@
 17.4. Conclusiones sobre el mercado electrico  
 17.5. Valor de la aplicacion practica  
 
-### 18. Lineas futuras
+### 18. Lineas futuras _(pendiente de desarrollar)_
 
 18.1. Incorporacion de demanda prevista  
 18.2. Incorporacion de meteorologia  
@@ -195,7 +201,7 @@
 18.7. Optimizacion de hiperparametros  
 18.8. Despliegue como aplicacion web  
 
-### 19. Planificacion del proyecto
+### 19. Planificacion del proyecto _(pendiente de desarrollar)_
 
 19.1. Fases del desarrollo  
 19.2. Cronograma estimado  
@@ -203,7 +209,7 @@
 19.4. Riesgos identificados  
 19.5. Gestion del repositorio  
 
-### 20. Bibliografia y referencias
+### 20. Bibliografia y referencias _(pendiente de desarrollar)_
 
 20.1. Documentacion de OMIE  
 20.2. Documentacion de ESIOS/REE  
@@ -212,7 +218,7 @@
 20.5. Bibliografia sobre series temporales  
 20.6. Bibliografia sobre aprendizaje automatico  
 
-### 21. Anexos
+### 21. Anexos _(pendiente de desarrollar)_
 
 21.1. Manual de instalacion  
 21.2. Manual de usuario de la interfaz grafica  
@@ -222,4 +228,3 @@
 21.6. Fragmentos relevantes de codigo  
 21.7. Resultados completos de experimentacion  
 21.8. Capturas de pantalla de la aplicacion  
-
