@@ -6,6 +6,7 @@
 
 - [Capitulo 1. Resumen](capitulo_01_resumen.md)
 - [Capitulo 2. Introduccion](capitulo_02_introduccion.md)
+- [Capitulo 3. Objetivos](capitulo_03_objetivos.md)
 
 > Nota: a medida que se desarrollen nuevos capitulos, se anadiran enlaces a sus ficheros Markdown correspondientes.
 
@@ -25,7 +26,7 @@
 2.4. Alcance del trabajo  
 2.5. Estructura del documento  
 
-### 3. Objetivos _(pendiente de desarrollar)_
+### [3. Objetivos](capitulo_03_objetivos.md)
 
 3.1. Objetivo general  
 3.2. Objetivos especificos  
