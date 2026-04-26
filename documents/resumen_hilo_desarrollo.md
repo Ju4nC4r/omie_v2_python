@@ -513,13 +513,13 @@ Dentro se generó el índice del TFG y capítulos desarrollados en ficheros Mark
 El índice actual es:
 
 ```text
-documents/TFG-Predicion-MercadoElectrico-Indice.md
+documents/DOCUMENT-Predicion-MercadoElectrico-Indice.md
 ```
 
 El fichero de índice fue renombrado desde un nombre anterior para quedar como:
 
 ```text
-TFG-Predicion-MercadoElectrico-Indice.md
+DOCUMENT-Predicion-MercadoElectrico-Indice.md
 ```
 
 También se corrigió el índice para que los apartados de segundo nivel coincidieran con los capítulos ya desarrollados. En concreto, se añadieron al capítulo 1:
