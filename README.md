@@ -82,11 +82,11 @@ Inferencia siguiente periodo
 Extraer el repositorio de github
 
 ```bash
-git clone [proyecto-github]
-cd [dir-project]
+git clone https://github.com/Ju4nC4r/omie_v2_python.git
+cd omie_v2_python
 ```
 
-Desde la carpeta del proyecto [dir-project]:
+Desde la carpeta del proyecto "omie_v2_python":
 
 ```bash
 python3 -m venv .venv
