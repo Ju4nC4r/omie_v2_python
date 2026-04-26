@@ -1,6 +1,7 @@
-# Índice propuesto de Trabajo Fin de Grado
 
-## Predicción del mercado eléctrico español mediante técnicas de aprendizaje automático
+
+# Predicción del mercado eléctrico español mediante técnicas de aprendizaje automático
+
 
 ## Capítulos desarrollados
 
