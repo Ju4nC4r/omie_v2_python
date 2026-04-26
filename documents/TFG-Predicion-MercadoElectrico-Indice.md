@@ -19,6 +19,9 @@
 - [Capitulo 13. Aplicacion practica desarrollada](capitulo_13_aplicacion_practica_desarrollada.md)
 - [Capitulo 14. Informacion concreta del proyecto implementado](capitulo_14_informacion_concreta_proyecto.md)
 - [Capitulo 15. Resultados experimentales](capitulo_15_resultados_experimentales.md)
+- [Capitulo 16. Discusion](capitulo_16_discusion.md)
+- [Capitulo 17. Conclusiones](capitulo_17_conclusiones.md)
+- [Capitulo 18. Lineas futuras](capitulo_18_lineas_futuras.md)
 
 > Nota: a medida que se desarrollen nuevos capitulos, se anadiran enlaces a sus ficheros Markdown correspondientes.
 
@@ -189,7 +192,7 @@
 15.7. Caso practico: prediccion para `2026-01-01 00:00`  
 15.8. Comparacion con el valor real publicado por OMIE  
 
-### 16. Discusion _(pendiente de desarrollar)_
+### [16. Discusion](capitulo_16_discusion.md)
 
 16.1. Interpretacion de resultados  
 16.2. Influencia de la cantidad de datos historicos  
@@ -199,7 +202,7 @@
 16.6. Riesgos de sobreajuste  
 16.7. Robustez del sistema ante datos ausentes  
 
-### 17. Conclusiones _(pendiente de desarrollar)_
+### [17. Conclusiones](capitulo_17_conclusiones.md)
 
 17.1. Cumplimiento de objetivos  
 17.2. Principales aportaciones del trabajo  
@@ -207,7 +210,7 @@
 17.4. Conclusiones sobre el mercado electrico  
 17.5. Valor de la aplicacion practica  
 
-### 18. Lineas futuras _(pendiente de desarrollar)_
+### [18. Lineas futuras](capitulo_18_lineas_futuras.md)
 
 18.1. Incorporacion de demanda prevista  
 18.2. Incorporacion de meteorologia  
