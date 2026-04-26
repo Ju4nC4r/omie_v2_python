@@ -1,7 +1,10 @@
 from __future__ import annotations
 
 import argparse
+import os
 from pathlib import Path
+
+os.environ.setdefault("LOKY_MAX_CPU_COUNT", "1")
 
 import joblib
 import pandas as pd
