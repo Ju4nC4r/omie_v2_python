@@ -21,6 +21,7 @@ Incluye:
 - [Uso por consola](#-uso-por-consola)
 - [Modelos disponibles](#-modelos-disponibles)
 - [Datos de OMIE](#-datos-de-omie)
+- [Datos eolicos y solares de ESIOS](#-datos-eolicos-y-solares-de-esios)
 - [Variables del modelo](#-variables-del-modelo)
 - [Metricas](#-metricas)
 - [Artefactos generados](#-artefactos-generados)
@@ -28,6 +29,7 @@ Incluye:
 - [GitHub con SSH](#-github-con-ssh)
 - [Problemas frecuentes](#-problemas-frecuentes)
 - [Ideas de mejora](#-ideas-de-mejora)
+- [Referencias](#-referencias)
 
 ## 🚀 Resumen
 
@@ -38,6 +40,7 @@ El proyecto trabaja con el precio marginal espanol publicado por OMIE:
 - **Frecuencia:** horaria y preparada para periodos de 15 minutos cuando OMIE los publique en el fichero.
 - **Modelos:** `RidgeCV`, `MLPRegressor`, `HistGradientBoostingRegressor`.
 - **Modo recomendado:** `auto`, que prueba los tres modelos y guarda el que obtiene menor `MAE`.
+- **Variables externas opcionales:** prevision eolica y solar desde ESIOS/REE.
 - **Salida principal:** `models/omie_model.joblib`.
 - **Grafica:** `models/validation_plot.png`.
 
@@ -109,6 +112,8 @@ La ventana permite ejecutar las fases del modelo:
 4. 🔮 **Inferencia:** predice el siguiente periodo.
 5. 📈 **Abrir grafica:** abre la grafica de validacion.
 
+Si marcas **ESIOS**, la extraccion tambien anade prevision eolica y solar. Para ello necesitas indicar un token en el campo **Token ESIOS** o exportar la variable `ESIOS_TOKEN`.
+
 ### Selector de modelo
 
 En el desplegable **Modelo** puedes elegir:
@@ -144,6 +149,19 @@ Entrenar solo Gradient Boosting:
 
 ```bash
 omie-price-train --start 2025-01-01 --end 2025-03-31 --model hist_gradient_boosting
+```
+
+Entrenar anadiendo prevision eolica/solar de ESIOS:
+
+```bash
+export ESIOS_TOKEN="tu_token_esios"
+omie-price-train --start 2025-01-01 --end 2025-03-31 --model auto --include-esios
+```
+
+Tambien puedes pasar el token directamente:
+
+```bash
+omie-price-train --start 2025-01-01 --end 2025-03-31 --model auto --include-esios --esios-token "tu_token_esios"
 ```
 
 Predecir el siguiente periodo con el modelo guardado:
@@ -309,9 +327,52 @@ Campos relevantes:
 - `marginal_pt`: precio marginal Portugal.
 - `marginal_es`: precio marginal Espana, usado como objetivo.
 
+## 🌬️☀️ Datos eolicos y solares de ESIOS
+
+ESIOS es la API de datos del sistema electrico de Red Electrica. El proyecto puede usar tres indicadores de prevision:
+
+| Indicador | Columna generada | Descripcion |
+|---|---|---|
+| `541` | `wind_forecast_mwh` | Prevision de produccion eolica nacional peninsular. |
+| `542` | `solar_pv_forecast_mwh` | Generacion prevista solar fotovoltaica. |
+| `543` | `solar_thermal_forecast_mwh` | Generacion prevista solar termica. |
+
+Ademas se crean columnas derivadas:
+
+- `solar_forecast_mwh`
+- `renewable_forecast_mwh`
+- `wind_solar_ratio`
+
+### Configurar token
+
+El token puede pasarse de dos formas:
+
+```bash
+export ESIOS_TOKEN="tu_token_esios"
+```
+
+o:
+
+```bash
+omie-price-train --start 2025-01-01 --end 2025-03-31 --include-esios --esios-token "tu_token_esios"
+```
+
+### Que cambia en el modelo
+
+Sin ESIOS, el modelo aprende solo de calendario y precio historico. Con ESIOS, tambien ve cuanta eolica y solar se espera para cada periodo.
+
+Esto puede ayudar a capturar situaciones como:
+
+- muchas horas solares con precios bajos
+- baja eolica con precios altos
+- cambios rapidos de renovable disponible
+- diferencias entre dias laborales, fines de semana y festivos con mucha renovable
+
+Los datos ESIOS se cachean en `data/processed/esios_generation_YYYYMMDD_YYYYMMDD.csv`.
+
 ## 🧪 Variables del modelo
 
-Los modelos no usan todavia variables externas. Aprenden a partir de informacion historica del propio precio:
+Los modelos siempre aprenden a partir de informacion historica del propio precio:
 
 - 🕒 momento del dia
 - 📅 dia de la semana
@@ -323,6 +384,15 @@ Los modelos no usan todavia variables externas. Aprenden a partir de informacion
 - 🔻 minimos y maximos moviles de `24` y `168` periodos
 - 🔁 diferencias frente al periodo anterior, el dia anterior y la semana anterior
 - ➗ ratios frente al dia anterior y la semana anterior
+
+Si activas ESIOS, se anaden tambien:
+
+- 🌬️ `wind_forecast_mwh`
+- ☀️ `solar_pv_forecast_mwh`
+- 🌞 `solar_thermal_forecast_mwh`
+- ♻️ `renewable_forecast_mwh`
+- ☀️ `solar_forecast_mwh`
+- ⚖️ `wind_solar_ratio`
 
 ## 📏 Metricas
 
@@ -453,3 +523,9 @@ Conservar `data/raw/` evita descargar otra vez los ficheros ya cacheados.
 - 🧪 Guardar historico de experimentos y parametros.
 - 📓 Crear notebooks de analisis exploratorio.
 - 🧠 Probar modelos especificos de series temporales.
+
+## 🔎 Referencias
+
+- [Documentacion API ESIOS](https://api.esios.ree.es/doc/)
+- [Listado de indicadores ESIOS](https://api.esios.ree.es/documents/658/download?locale=en)
+- [OMIE](https://www.omie.es/)

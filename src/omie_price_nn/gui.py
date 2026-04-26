@@ -4,8 +4,9 @@ import queue
 import threading
 import traceback
 import webbrowser
+import os
 from pathlib import Path
-from tkinter import END, LEFT, BOTH, StringVar, Tk, Text
+from tkinter import BooleanVar, END, StringVar, Tk, Text
 from tkinter import messagebox
 from tkinter import ttk
 
@@ -13,6 +14,7 @@ import joblib
 import pandas as pd
 
 from .data import OmieConfig, load_omie_prices, parse_date
+from .esios import enrich_with_esios_generation
 from .features import make_next_prediction_features, make_supervised_dataset
 from .train import MODEL_CHOICES, train_model
 
@@ -39,9 +41,13 @@ class OmiePriceApp:
         self.model_var = StringVar(value="-")
         self.prediction_var = StringVar(value="-")
         self.training_choice_var = StringVar(value="auto")
+        self.include_esios_var = BooleanVar(value=False)
+        self.esios_token_var = StringVar(value=os.getenv("ESIOS_TOKEN", ""))
         self.current_start = parse_date(self.start_var.get())
         self.current_end = parse_date(self.end_var.get())
         self.current_model_choice = self.training_choice_var.get()
+        self.current_include_esios = self.include_esios_var.get()
+        self.current_esios_token = self.esios_token_var.get()
 
         self._build_ui()
         self.root.after(150, self._poll_events)
@@ -52,7 +58,7 @@ class OmiePriceApp:
 
         header = ttk.Frame(self.root, padding=14)
         header.grid(row=0, column=0, sticky="ew")
-        header.columnconfigure(7, weight=1)
+        header.columnconfigure(9, weight=1)
 
         ttk.Label(header, text="Fecha inicio").grid(row=0, column=0, sticky="w")
         ttk.Entry(header, width=14, textvariable=self.start_var).grid(row=0, column=1, padx=(6, 18))
@@ -67,10 +73,14 @@ class OmiePriceApp:
             state="readonly",
         )
         self.training_choice.grid(row=0, column=5, padx=(6, 18), sticky="w")
-        ttk.Button(header, text="Ejecutar todo", command=self.run_all).grid(row=0, column=6, padx=(0, 8))
-        ttk.Label(header, textvariable=self.status_var).grid(row=0, column=7, sticky="e")
+        ttk.Checkbutton(header, text="ESIOS", variable=self.include_esios_var).grid(row=0, column=6, padx=(0, 10))
+        ttk.Button(header, text="Ejecutar todo", command=self.run_all).grid(row=0, column=7, padx=(0, 8))
+        ttk.Label(header, textvariable=self.status_var).grid(row=0, column=8, columnspan=2, sticky="e")
+        ttk.Label(header, text="Token ESIOS").grid(row=1, column=0, sticky="w", pady=(10, 0))
+        self.esios_token_entry = ttk.Entry(header, textvariable=self.esios_token_var, show="*", width=42)
+        self.esios_token_entry.grid(row=1, column=1, columnspan=4, sticky="ew", padx=(6, 18), pady=(10, 0))
         self.progress = ttk.Progressbar(header, mode="indeterminate", length=150)
-        self.progress.grid(row=1, column=0, columnspan=8, sticky="ew", pady=(10, 0))
+        self.progress.grid(row=2, column=0, columnspan=10, sticky="ew", pady=(10, 0))
 
         phases = ttk.Frame(self.root, padding=(14, 0, 14, 8))
         phases.grid(row=1, column=0, sticky="ew")
@@ -215,6 +225,7 @@ class OmiePriceApp:
         ):
             button.configure(state=state)
         self.training_choice.configure(state="disabled" if state == "disabled" else "readonly")
+        self.esios_token_entry.configure(state=state)
 
     def _append_log(self, text: str) -> None:
         self.log.insert(END, text)
@@ -229,12 +240,18 @@ class OmiePriceApp:
             model_choice = self.training_choice_var.get().strip()
             if model_choice not in MODEL_CHOICES:
                 raise ValueError("Selecciona un modelo valido.")
+            include_esios = self.include_esios_var.get()
+            esios_token = self.esios_token_var.get().strip()
+            if include_esios and not esios_token:
+                raise ValueError("Activa ESIOS solo si has indicado un token o configurado ESIOS_TOKEN.")
         except Exception as exc:
             messagebox.showerror("Configuracion invalida", str(exc))
             return False
         self.current_start = start
         self.current_end = end
         self.current_model_choice = model_choice
+        self.current_include_esios = include_esios
+        self.current_esios_token = esios_token
         return True
 
     def _run_all_steps(self) -> None:
@@ -247,6 +264,10 @@ class OmiePriceApp:
         start, end = self.current_start, self.current_end
         self.events.put(("log", f"Descargando OMIE desde {start} hasta {end}...\n"))
         data = load_omie_prices(start, end, OmieConfig())
+        if self.current_include_esios:
+            self.events.put(("log", "Descargando prevision eolica/solar de ESIOS...\n"))
+            data = enrich_with_esios_generation(data, start, end, self.current_esios_token)
+            data.to_csv(DATA_PATH, index=False)
         self.events.put(("data", f"{len(data)} filas en {DATA_PATH}"))
         self.events.put(("log", f"Datos listos: {len(data)} filas, {data['timestamp'].min()} -> {data['timestamp'].max()}\n"))
         return data
@@ -270,6 +291,10 @@ class OmiePriceApp:
 
     def _train_and_test(self):
         data = self._load_processed_data()
+        if self.current_include_esios and "wind_forecast_mwh" not in data.columns:
+            self.events.put(("log", "Anadiendo prevision eolica/solar de ESIOS al dataset existente...\n"))
+            data = enrich_with_esios_generation(data, self.current_start, self.current_end, self.current_esios_token)
+            data.to_csv(DATA_PATH, index=False)
         model_choice = self.current_model_choice
         if model_choice == "auto":
             self.events.put(("log", "Entrenando todos los candidatos y evaluando validacion temporal...\n"))

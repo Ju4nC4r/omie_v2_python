@@ -20,8 +20,9 @@ def main() -> None:
 
     bundle = joblib.load(args.model_path)
     model = bundle["model"]
+    feature_columns = bundle.get("feature_columns")
     data = pd.read_csv(Path(args.data_path))
-    x_next, next_timestamp = make_next_prediction_features(data)
+    x_next, next_timestamp = make_next_prediction_features(data, expected_feature_columns=feature_columns)
     prediction = model.predict(x_next)[0]
 
     print(f"Prediccion para {next_timestamp}: {prediction:.2f} EUR/MWh")

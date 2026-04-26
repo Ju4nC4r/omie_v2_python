@@ -31,6 +31,7 @@ from sklearn.compose import TransformedTargetRegressor
 from sklearn.preprocessing import RobustScaler, StandardScaler
 
 from .data import OmieConfig, load_omie_prices, parse_date
+from .esios import enrich_with_esios_generation
 from .features import make_supervised_dataset
 
 
@@ -174,6 +175,8 @@ def main() -> None:
     parser.add_argument("--end", required=True, help="Fecha final YYYY-MM-DD")
     parser.add_argument("--model-path", default="models/omie_model.joblib")
     parser.add_argument("--plot-path", default="models/validation_plot.png")
+    parser.add_argument("--include-esios", action="store_true", help="Anade prevision eolica/solar de ESIOS.")
+    parser.add_argument("--esios-token", default=os.getenv("ESIOS_TOKEN"), help="Token ESIOS. Tambien vale ESIOS_TOKEN.")
     parser.add_argument(
         "--model",
         choices=MODEL_CHOICES,
@@ -182,7 +185,15 @@ def main() -> None:
     )
     args = parser.parse_args()
 
-    data = load_omie_prices(parse_date(args.start), parse_date(args.end), OmieConfig())
+    start = parse_date(args.start)
+    end = parse_date(args.end)
+    if args.include_esios:
+        if not args.esios_token:
+            raise SystemExit("Missing ESIOS token. Set ESIOS_TOKEN or pass --esios-token.")
+    data = load_omie_prices(start, end, OmieConfig())
+    if args.include_esios:
+        data = enrich_with_esios_generation(data, start, end, args.esios_token)
+        data.to_csv("data/processed/omie_prices.csv", index=False)
     metrics = train_model(data, Path(args.model_path), Path(args.plot_path), model_choice=args.model)
 
     print("Entrenamiento completado")

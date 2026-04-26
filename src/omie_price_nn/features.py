@@ -5,9 +5,17 @@ import pandas as pd
 
 
 TARGET_COLUMN = "marginal_es"
+EXTERNAL_FEATURE_COLUMNS = [
+    "wind_forecast_mwh",
+    "solar_pv_forecast_mwh",
+    "solar_thermal_forecast_mwh",
+    "renewable_forecast_mwh",
+    "solar_forecast_mwh",
+    "wind_solar_ratio",
+]
 LAGS = (1, 2, 3, 4, 5, 6, 12, 23, 24, 25, 48, 72, 168, 336)
 ROLLING_WINDOWS = (3, 6, 12, 24, 48, 168)
-FEATURE_COLUMNS = [
+BASE_FEATURE_COLUMNS = [
     "period",
     "time_of_day_sin",
     "time_of_day_cos",
@@ -31,6 +39,12 @@ FEATURE_COLUMNS = [
     "price_ratio_24",
     "price_ratio_168",
 ]
+FEATURE_COLUMNS = BASE_FEATURE_COLUMNS
+
+
+def get_feature_columns(data: pd.DataFrame) -> list[str]:
+    external = [column for column in EXTERNAL_FEATURE_COLUMNS if column in data.columns]
+    return [*BASE_FEATURE_COLUMNS, *external]
 
 
 def add_time_features(data: pd.DataFrame) -> pd.DataFrame:
@@ -82,11 +96,14 @@ def build_feature_frame(data: pd.DataFrame) -> pd.DataFrame:
 
 def make_supervised_dataset(data: pd.DataFrame) -> tuple[pd.DataFrame, pd.Series]:
     df = build_feature_frame(data)
-    df = df.dropna(subset=FEATURE_COLUMNS + [TARGET_COLUMN]).reset_index(drop=True)
-    return df[FEATURE_COLUMNS], df[TARGET_COLUMN]
+    feature_columns = get_feature_columns(df)
+    df = df.dropna(subset=feature_columns + [TARGET_COLUMN]).reset_index(drop=True)
+    return df[feature_columns], df[TARGET_COLUMN]
 
 
-def make_next_prediction_features(data: pd.DataFrame) -> tuple[pd.DataFrame, pd.Timestamp]:
+def make_next_prediction_features(
+    data: pd.DataFrame, expected_feature_columns: list[str] | None = None
+) -> tuple[pd.DataFrame, pd.Timestamp]:
     df = data.copy()
     df["timestamp"] = pd.to_datetime(df["timestamp"])
     df = df.sort_values("timestamp").reset_index(drop=True)
@@ -104,10 +121,14 @@ def make_next_prediction_features(data: pd.DataFrame) -> tuple[pd.DataFrame, pd.
         "marginal_pt": np.nan,
         TARGET_COLUMN: np.nan,
     }
+    expected_feature_columns = expected_feature_columns or get_feature_columns(df)
+    for column in EXTERNAL_FEATURE_COLUMNS:
+        if column in expected_feature_columns and column in df.columns:
+            next_row[column] = df[column].ffill().iloc[-1]
 
     future = pd.concat([df, pd.DataFrame([next_row])], ignore_index=True)
     featured = build_feature_frame(future)
-    x_next = featured.tail(1)[FEATURE_COLUMNS]
+    x_next = featured.tail(1)[expected_feature_columns]
     if x_next.isna().any(axis=None):
         raise ValueError("Not enough history to build prediction features for the next period.")
     return x_next, next_timestamp
