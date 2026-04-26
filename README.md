@@ -79,11 +79,16 @@ Inferencia siguiente periodo
 
 ## 🛠️ Instalacion
 
-Desde la carpeta del proyecto:
+Extraer el repositorio de github
 
 ```bash
-mkdir  InferenceMEE
-cd InferenceMEE
+git clone [proyecto-github]
+cd [dir-project]
+```
+
+Desde la carpeta del proyecto [dir-project]:
+
+```bash
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
