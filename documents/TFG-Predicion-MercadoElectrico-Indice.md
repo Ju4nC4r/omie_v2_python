@@ -9,6 +9,7 @@
 - [Capitulo 3. Objetivos](capitulo_03_objetivos.md)
 - [Capitulo 4. Marco teorico](capitulo_04_marco_teorico.md)
 - [Capitulo 5. Estado del arte](capitulo_05_estado_del_arte.md)
+- [Capitulo 6. Fuentes de datos](capitulo_06_fuentes_de_datos.md)
 
 > Nota: a medida que se desarrollen nuevos capitulos, se anadiran enlaces a sus ficheros Markdown correspondientes.
 
@@ -58,7 +59,7 @@
 5.5. Comparacion de enfoques existentes  
 5.6. Principales retos detectados en la literatura  
 
-### 6. Fuentes de datos _(pendiente de desarrollar)_
+### [6. Fuentes de datos](capitulo_06_fuentes_de_datos.md)
 
 6.1. Datos de precio del mercado diario OMIE  
 6.2. Formato de los ficheros `MARGINALPDBC`  
