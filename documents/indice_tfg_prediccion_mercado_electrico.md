@@ -5,6 +5,7 @@
 ## Capitulos desarrollados
 
 - [Capitulo 1. Resumen](capitulo_01_resumen.md)
+- [Capitulo 2. Introduccion](capitulo_02_introduccion.md)
 
 > Nota: a medida que se desarrollen nuevos capitulos, se anadiran enlaces a sus ficheros Markdown correspondientes.
 
@@ -16,7 +17,7 @@
 1.4. Resultados esperados  
 1.5. Aplicacion practica desarrollada  
 
-### 2. Introduccion _(pendiente de desarrollar)_
+### [2. Introduccion](capitulo_02_introduccion.md)
 
 2.1. Motivacion del estudio  
 2.2. Importancia de la prediccion del precio electrico  
