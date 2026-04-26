@@ -12,6 +12,10 @@
 - [Capitulo 6. Fuentes de datos](capitulo_06_fuentes_de_datos.md)
 - [Capitulo 7. Preparacion de datos](capitulo_07_preparacion_de_datos.md)
 - [Capitulo 8. Ingenieria de variables](capitulo_08_ingenieria_de_variables.md)
+- [Capitulo 9. Modelos de prediccion](capitulo_09_modelos_de_prediccion.md)
+- [Capitulo 10. Metodologia de evaluacion](capitulo_10_metodologia_de_evaluacion.md)
+- [Capitulo 11. Diseno de la aplicacion practica](capitulo_11_diseno_aplicacion_practica.md)
+- [Capitulo 12. Implementacion del proyecto](capitulo_12_implementacion_proyecto.md)
 - [Capitulo 13. Aplicacion practica desarrollada](capitulo_13_aplicacion_practica_desarrollada.md)
 - [Capitulo 14. Informacion concreta del proyecto implementado](capitulo_14_informacion_concreta_proyecto.md)
 - [Capitulo 15. Resultados experimentales](capitulo_15_resultados_experimentales.md)
@@ -103,7 +107,7 @@
 8.9. Variables externas de generacion renovable  
 8.10. Variables derivadas de eolica y solar  
 
-### 9. Modelos de prediccion _(pendiente de desarrollar)_
+### [9. Modelos de prediccion](capitulo_09_modelos_de_prediccion.md)
 
 9.1. Modelo baseline `lag 24`  
 9.2. Regresion Ridge `RidgeCV`  
@@ -114,7 +118,7 @@
 9.7. Hiperparametros utilizados  
 9.8. Ventajas e inconvenientes de cada modelo  
 
-### 10. Metodologia de evaluacion _(pendiente de desarrollar)_
+### [10. Metodologia de evaluacion](capitulo_10_metodologia_de_evaluacion.md)
 
 10.1. Validacion temporal  
 10.2. Evitar fuga de informacion futura  
@@ -125,7 +129,7 @@
 10.7. Analisis de errores  
 10.8. Evaluacion por rangos temporales  
 
-### 11. Diseno de la aplicacion practica _(pendiente de desarrollar)_
+### [11. Diseno de la aplicacion practica](capitulo_11_diseno_aplicacion_practica.md)
 
 11.1. Arquitectura general del software  
 11.2. Modulos principales del proyecto  
@@ -136,7 +140,7 @@
 11.7. Configuracion del entorno Python  
 11.8. Control de versiones con Git  
 
-### 12. Implementacion del proyecto _(pendiente de desarrollar)_
+### [12. Implementacion del proyecto](capitulo_12_implementacion_proyecto.md)
 
 12.1. Estructura de directorios  
 12.2. Modulo de descarga y parseo de OMIE  
