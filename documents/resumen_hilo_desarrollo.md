@@ -1,19 +1,22 @@
-# Resumen estructurado del hilo de desarrollo
+# Resumen estructurado actualizado del hilo de desarrollo
 
-## 1. Objetivo inicial
+## 1. Objetivo inicial del proyecto
 
 El proyecto comenzo como una aplicacion sencilla para entrenar una red neuronal capaz de inferir el precio del mercado electrico espanol a partir de datos publicos de OMIE.
 
-Durante el desarrollo, el alcance se amplio progresivamente hasta convertirse en una herramienta completa para:
+La idea inicial era intencionadamente pequena: aprender de calendario, ciclos horarios/semanales y precios retardados. Durante el hilo, el alcance se amplio progresivamente hasta convertirse en una aplicacion completa para:
 
 - descargar datos OMIE
 - preparar un dataset supervisado
 - entrenar varios modelos
 - comparar metricas
 - realizar inferencia
-- usar una interfaz grafica
-- incorporar opcionalmente datos eolicos y solares de ESIOS
-- documentar el proyecto como base para un Trabajo Fin de Grado
+- ejecutar el flujo desde una interfaz grafica
+- incorporar opcionalmente prevision eolica y solar desde ESIOS
+- documentar el proyecto como base de un Trabajo Fin de Grado
+- guardar los avances con Git
+
+El proyecto se ha orientado tanto a la parte practica de machine learning como a la redaccion academica del TFG.
 
 ## 2. Estructura general del proyecto
 
@@ -23,7 +26,7 @@ Se creo un paquete Python llamado:
 omie_price_nn
 ```
 
-La estructura principal quedo organizada asi:
+La estructura principal del proyecto quedo organizada asi:
 
 ```text
 .
@@ -41,20 +44,23 @@ La estructura principal quedo organizada asi:
 │   ├── predict.py
 │   └── train.py
 ├── .gitignore
+├── LICENSE
 ├── README.md
 ├── pyproject.toml
 └── requirements.txt
 ```
 
+El directorio `documents/` se creo para alojar la documentacion del TFG y los resumenes del desarrollo.
+
 ## 3. Entorno Python
 
-Se creo un entorno virtual en:
+Se preparo un entorno virtual local:
 
 ```text
 .venv/
 ```
 
-Comandos principales:
+Comandos principales de preparacion:
 
 ```bash
 python3 -m venv .venv
@@ -72,7 +78,38 @@ Dependencias principales:
 - `joblib`
 - `matplotlib`
 
-## 4. Descarga de datos OMIE
+El proyecto exige Python `>=3.10`.
+
+## 4. Comandos disponibles
+
+En `pyproject.toml` se definieron tres comandos principales:
+
+```text
+omie-price-gui
+omie-price-train
+omie-price-predict
+```
+
+Significado:
+
+- `omie-price-gui`: abre la interfaz grafica.
+- `omie-price-train`: descarga/prepara datos y entrena modelos.
+- `omie-price-predict`: carga el modelo entrenado y predice el siguiente periodo.
+
+Ejemplo de entrenamiento:
+
+```bash
+omie-price-train --start 2025-01-01 --end 2025-03-31 --model auto
+```
+
+Ejemplo con ESIOS:
+
+```bash
+export ESIOS_TOKEN="tu_token_esios"
+omie-price-train --start 2025-01-01 --end 2025-03-31 --model auto --include-esios
+```
+
+## 5. Descarga y parseo de datos OMIE
 
 Se implemento el modulo:
 
@@ -84,9 +121,10 @@ Funciones principales:
 
 - descarga de ficheros diarios OMIE
 - parseo de ficheros `MARGINALPDBC`
-- generacion de timestamps
+- generacion de `timestamp`
 - cache local en `data/raw/`
 - generacion de `data/processed/omie_prices.csv`
+- gestion de fallos por dia en rangos largos
 
 Fuente OMIE usada:
 
@@ -94,7 +132,7 @@ Fuente OMIE usada:
 https://www.omie.es/es/file-download?parents%5B0%5D=marginalpdbc&filename=marginalpdbc_YYYYMMDD.1
 ```
 
-Campo objetivo:
+Campo objetivo del modelo:
 
 ```text
 marginal_es
@@ -105,7 +143,45 @@ El parser se preparo para:
 - datos horarios de 24 periodos
 - datos cuarto-horarios de 96 periodos
 
-## 5. Preparacion de variables
+La deteccion se realiza por el numero maximo de periodos del dia.
+
+## 6. Integracion opcional con ESIOS
+
+Se implemento el modulo:
+
+```text
+src/omie_price_nn/esios.py
+```
+
+La integracion ESIOS permite incorporar prevision renovable:
+
+```text
+541 -> wind_forecast_mwh
+542 -> solar_pv_forecast_mwh
+543 -> solar_thermal_forecast_mwh
+```
+
+Variables derivadas:
+
+```text
+solar_forecast_mwh
+renewable_forecast_mwh
+wind_solar_ratio
+```
+
+Caracteristicas de la integracion:
+
+- requiere token ESIOS
+- puede usarse con `--include-esios`
+- tambien acepta la variable de entorno `ESIOS_TOKEN`
+- cachea datos en `data/processed/esios_generation_YYYYMMDD_YYYYMMDD.csv`
+- une OMIE y ESIOS por `timestamp`
+- usa union temporal hacia atras con tolerancia de una hora
+- rellena huecos pequenos con `ffill` y `bfill`
+
+Si se activa ESIOS sin token, el programa falla de forma temprana con un mensaje claro.
+
+## 7. Ingenieria de variables
 
 Se implemento el modulo:
 
@@ -113,12 +189,18 @@ Se implemento el modulo:
 src/omie_price_nn/features.py
 ```
 
-Variables generadas:
+Variables base generadas:
 
-- variables ciclicas de hora
-- variables ciclicas de dia de la semana
-- variables ciclicas de mes
-- indicador de fin de semana
+- `period`
+- `time_of_day_sin`
+- `time_of_day_cos`
+- `hour_sin`
+- `hour_cos`
+- `dow_sin`
+- `dow_cos`
+- `month_sin`
+- `month_cos`
+- `is_weekend`
 - retardos del precio
 - medias moviles
 - desviaciones moviles
@@ -126,19 +208,25 @@ Variables generadas:
 - diferencias temporales
 - ratios temporales
 
-Retardos principales:
+Retardos usados:
 
 ```text
 1, 2, 3, 4, 5, 6, 12, 23, 24, 25, 48, 72, 168, 336
 ```
 
-La matriz inicial de entrenamiento tenia 45 variables. Al activar ESIOS sube a 51 variables.
+Ventanas moviles:
 
-## 6. Modelos de entrenamiento
+```text
+3, 6, 12, 24, 48, 168
+```
 
-Inicialmente se planteo una red neuronal sencilla, pero se mejoro el sistema para comparar varios modelos.
+La matriz sin ESIOS tiene 45 variables. Al activar ESIOS se anaden 6 variables externas y derivadas, subiendo a 51 variables.
 
-Se implemento en:
+Para evitar fuga de informacion, las medias y estadisticos moviles se calculan usando el precio desplazado un periodo.
+
+## 8. Modelos de entrenamiento
+
+Se implemento el entrenamiento en:
 
 ```text
 src/omie_price_nn/train.py
@@ -153,7 +241,7 @@ mlp
 hist_gradient_boosting
 ```
 
-### 6.1. `ridge`
+### 8.1. `ridge`
 
 Usa:
 
@@ -161,9 +249,9 @@ Usa:
 RidgeCV
 ```
 
-Es una regresion lineal regularizada.
+Es una regresion lineal regularizada. Es rapida, estable y adecuada como modelo base.
 
-### 6.2. `mlp`
+### 8.2. `mlp`
 
 Usa:
 
@@ -171,9 +259,9 @@ Usa:
 MLPRegressor
 ```
 
-Es una red neuronal feed-forward sencilla.
+Es una red neuronal feed-forward sencilla. Representa la idea inicial del proyecto, pero no siempre es el modelo con mejor resultado.
 
-### 6.3. `hist_gradient_boosting`
+### 8.3. `hist_gradient_boosting`
 
 Usa:
 
@@ -181,15 +269,81 @@ Usa:
 HistGradientBoostingRegressor
 ```
 
-Es un modelo de arboles con boosting.
+Es un modelo basado en arboles con boosting. En datos tabulares y con mas historico obtuvo muy buen rendimiento.
 
-### 6.4. `auto`
+### 8.4. `auto`
 
-Entrena los tres modelos y selecciona el de menor `MAE` en validacion temporal.
+No es un modelo, sino un modo de seleccion. Entrena:
 
-## 7. Metricas
+```text
+ridge
+mlp
+hist_gradient_boosting
+```
 
-Se explicaron y usaron estas metricas:
+Despues selecciona el que obtiene menor `MAE` en validacion temporal.
+
+## 9. Interfaz grafica
+
+Se implemento la GUI en:
+
+```text
+src/omie_price_nn/gui.py
+```
+
+Comando:
+
+```bash
+omie-price-gui
+```
+
+La interfaz permite ejecutar fases del flujo:
+
+- extraccion de datos
+- preparacion de datos
+- entrenamiento
+- test
+- inferencia
+
+Elementos principales:
+
+- fecha inicial
+- fecha final
+- selector de modelo
+- checkbox ESIOS
+- campo Token ESIOS
+- logs de ejecucion
+- barra de progreso
+
+Se corrigio el problema de que el entrenamiento pareciera quedarse bloqueado mostrando progreso y mensajes por candidato.
+
+## 10. Inferencia
+
+Se implemento la inferencia en:
+
+```text
+src/omie_price_nn/predict.py
+```
+
+Comando:
+
+```bash
+omie-price-predict
+```
+
+El sistema:
+
+- carga `models/omie_model.joblib`
+- lee los datos procesados
+- calcula el siguiente `timestamp`
+- genera las variables esperadas por el modelo
+- predice el siguiente periodo
+
+Tambien se silenció un aviso de CPU de joblib configurando `LOKY_MAX_CPU_COUNT=1` en la fase de prediccion.
+
+## 11. Metricas usadas
+
+Metricas explicadas y utilizadas:
 
 ```text
 MAE
@@ -198,33 +352,18 @@ R2
 Baseline lag 24 MAE
 ```
 
-### 7.1. MAE
+Significado:
 
-Error absoluto medio en `EUR/MWh`. Mas bajo es mejor.
+- `MAE`: error absoluto medio en `EUR/MWh`. Mas bajo es mejor.
+- `RMSE`: raiz del error cuadratico medio. Penaliza mas errores grandes.
+- `R2`: proporcion de variacion explicada. Mas cercano a 1 es mejor.
+- `Baseline lag 24 MAE`: error usando el precio de 24 periodos antes.
 
-### 7.2. RMSE
+El baseline sirve para comprobar si el modelo aporta valor frente a una regla sencilla.
 
-Raiz del error cuadratico medio. Penaliza mas los errores grandes.
+## 12. Resultados obtenidos
 
-### 7.3. R2
-
-Proporcion de variacion explicada por el modelo. Cuanto mas cerca de 1, mejor.
-
-### 7.4. Baseline lag 24
-
-Prediccion simple que usa el precio de 24 periodos antes.
-
-Ejemplo:
-
-```text
-prediccion = precio de ayer a la misma hora
-```
-
-Sirve como referencia para comprobar si el modelo realmente aporta valor.
-
-## 8. Resultados obtenidos
-
-### 8.1. Entrenamiento enero-marzo 2025
+### 12.1. Entrenamiento enero-marzo 2025
 
 Comando:
 
@@ -250,7 +389,7 @@ mlp: MAE 13.70
 hist_gradient_boosting: MAE 10.23
 ```
 
-### 8.2. Entrenamiento con casi todo 2025
+### 12.2. Entrenamiento con casi todo 2025
 
 Comando:
 
@@ -258,7 +397,7 @@ Comando:
 omie-price-train --start 2025-01-01 --end 2025-12-31 --model auto
 ```
 
-OMIE devolvio 404 para dos dias:
+OMIE no devolvio datos para:
 
 ```text
 2025-10-30
@@ -283,9 +422,9 @@ mlp: MAE 3.98
 hist_gradient_boosting: MAE 3.17
 ```
 
-## 9. Inferencia y comparacion con valor real
+## 13. Inferencia comparada con valor real OMIE
 
-Tras entrenar con 2025, se genero una prediccion:
+Tras entrenar con datos de 2025, se genero una prediccion:
 
 ```text
 Prediccion para 2026-01-01 00:00:00: 94.20 EUR/MWh
@@ -307,85 +446,61 @@ Error relativo: 15.90%
 
 Conclusion:
 
-El modelo infraestimo el precio del primer periodo de 2026. Se identifico que este tipo de error puede estar relacionado con festivos, cambios de regimen, falta de variables externas y particularidades de un dia como Año Nuevo.
+El modelo infraestimo el precio del primer periodo de 2026. Se identificaron posibles causas:
 
-## 10. Interfaz grafica
+- dia festivo de Ano Nuevo
+- falta de variable explicita de festivos
+- cambios de regimen
+- falta de demanda prevista
+- falta de meteorologia
+- falta de gas y CO2
+- limitaciones del uso de retardos por numero de periodos
 
-Se creo una interfaz grafica en:
+## 14. README
 
-```text
-src/omie_price_nn/gui.py
-```
+El README se amplio varias veces. Actualmente documenta:
 
-Comando:
+- objetivo del proyecto
+- instalacion con `.venv`
+- comandos principales
+- uso de la GUI
+- modelos disponibles
+- modo `auto`
+- uso de ESIOS
+- variables del modelo
+- metricas
+- artefactos generados
+- solucion de problemas
+- configuracion de SSH para GitHub
+- futuras mejoras
 
-```bash
-omie-price-gui
-```
+Tambien se pidio que el README usara emojis y fuera mas completo.
 
-La GUI permite ejecutar:
+## 15. Repositorio Git y GitHub
 
-- extraccion de datos
-- preparacion
-- entrenamiento y test
-- inferencia
-- apertura de grafica de validacion
+Se inicializo y uso Git durante el desarrollo. Se realizaron commits para los principales hitos.
 
-Tambien permite elegir modelo:
-
-- `auto`
-- `ridge`
-- `mlp`
-- `hist_gradient_boosting`
-
-Se corrigio un problema en el que el entrenamiento parecia quedarse bloqueado. Se anadio:
-
-- barra de progreso
-- logs por candidato
-- ejecucion en segundo plano
-- backend `Agg` para Matplotlib
-
-## 11. Integracion con ESIOS
-
-Se creo el modulo:
+Repositorio remoto configurado:
 
 ```text
-src/omie_price_nn/esios.py
+git@github.com:Ju4nC4r/omie_v2_python.git
 ```
 
-Permite incorporar prevision eolica y solar como variables externas.
-
-Indicadores usados:
+Tambien se documento la URL:
 
 ```text
-541 -> wind_forecast_mwh
-542 -> solar_pv_forecast_mwh
-543 -> solar_thermal_forecast_mwh
+https://github.com/Ju4nC4r/omie_v2_python.git
 ```
 
-Columnas derivadas:
+Los intentos de subida a GitHub fallaron por autenticacion SSH:
 
 ```text
-solar_forecast_mwh
-renewable_forecast_mwh
-wind_solar_ratio
+git@github.com: Permission denied (publickey).
 ```
 
-Uso por consola:
+Se explico como configurar una SSH key en macOS para GitHub.
 
-```bash
-export ESIOS_TOKEN="tu_token_esios"
-omie-price-train --start 2025-01-01 --end 2025-12-31 --model auto --include-esios
-```
-
-Tambien se anadio a la GUI:
-
-- checkbox `ESIOS`
-- campo `Token ESIOS`
-
-Si se activa ESIOS sin token, el programa falla antes de modificar datos.
-
-## 12. Documentacion creada
+## 16. Documentacion TFG creada
 
 Se creo el directorio:
 
@@ -393,67 +508,112 @@ Se creo el directorio:
 documents/
 ```
 
-Documentos creados:
+Dentro se genero el indice del TFG y capitulos desarrollados en ficheros Markdown separados.
+
+El indice actual es:
 
 ```text
-documents/indice_tfg_prediccion_mercado_electrico.md
-documents/capitulo_01_resumen.md
-documents/resumen_hilo_desarrollo.md
+documents/TFG-Predicion-MercadoElectrico-Indice.md
 ```
 
-### 12.1. Indice del TFG
+El fichero de indice fue renombrado desde un nombre anterior para quedar como:
 
-Incluye estructura completa del Trabajo Fin de Grado y enlaces a capitulos desarrollados.
+```text
+TFG-Predicion-MercadoElectrico-Indice.md
+```
 
-Actualmente enlaza a:
+Tambien se corrigio el indice para que los apartados de segundo nivel coincidieran con los capitulos ya desarrollados. En concreto, se anadieron al capitulo 1:
+
+```text
+1.6. Contribuciones del trabajo
+1.7. Alcance y limites del resumen
+1.8. Sintesis del capitulo
+```
+
+## 17. Capitulos del TFG desarrollados
+
+Actualmente estan desarrollados y enlazados en el indice:
 
 ```text
 capitulo_01_resumen.md
+capitulo_02_introduccion.md
+capitulo_03_objetivos.md
+capitulo_04_marco_teorico.md
+capitulo_05_estado_del_arte.md
+capitulo_06_fuentes_de_datos.md
+capitulo_07_preparacion_de_datos.md
+capitulo_08_ingenieria_de_variables.md
+capitulo_13_aplicacion_practica_desarrollada.md
+capitulo_14_informacion_concreta_proyecto.md
+capitulo_15_resultados_experimentales.md
 ```
 
-### 12.2. Capitulo 1
+### 17.1. Capitulo 1. Resumen
 
-Se desarrollo el capitulo:
+Presenta el contexto, objetivo, metodologia, resultados esperados, aplicacion practica, contribuciones, alcance y sintesis.
+
+### 17.2. Capitulo 2. Introduccion
+
+Desarrolla la motivacion, importancia de predecir el precio electrico, problema, alcance y estructura del documento.
+
+### 17.3. Capitulo 3. Objetivos
+
+Define el objetivo general, objetivos especificos, requisitos funcionales, requisitos no funcionales y limitaciones iniciales.
+
+### 17.4. Capitulo 4. Marco teorico
+
+Explica el funcionamiento del mercado electrico espanol, OMIE, ESIOS, factores de precio, renovables, series temporales y aprendizaje supervisado.
+
+### 17.5. Capitulo 5. Estado del arte
+
+Revisa modelos estadisticos clasicos, machine learning aplicado a energia, redes neuronales, modelos de boosting, comparacion de enfoques y retos de la literatura.
+
+### 17.6. Capitulo 6. Fuentes de datos
+
+Documenta OMIE, ficheros `MARGINALPDBC`, ESIOS, prevision eolica, solar fotovoltaica, solar termica, frecuencia temporal, calidad de datos y cache local.
+
+### 17.7. Capitulo 7. Preparacion de datos
+
+Explica descarga OMIE, ESIOS opcional, limpieza, normalizacion, union por `timestamp`, gestion de ausentes, dataset supervisado y validacion temporal.
+
+### 17.8. Capitulo 8. Ingenieria de variables
+
+Detalla variables de calendario, codificacion ciclica, retardos, medias moviles, desviaciones, minimos, maximos, diferencias, ratios y variables renovables.
+
+### 17.9. Capitulo 13. Aplicacion practica desarrollada
+
+Describe la aplicacion real, GUI, comandos, flujo de trabajo, seleccion de modelos, modo `auto`, OMIE, ESIOS, inferencia y comparacion con valor real.
+
+### 17.10. Capitulo 14. Informacion concreta del proyecto implementado
+
+Recoge la ficha tecnica del proyecto: nombre, Python, `.venv`, paquete, repositorio, comandos, modelo guardado y grafica generada.
+
+### 17.11. Capitulo 15. Resultados experimentales
+
+Documenta los resultados de enero-marzo 2025, casi todo 2025, comparacion de modelos, modo `auto`, baseline e inferencia frente a OMIE.
+
+## 18. Capitulos pendientes del TFG
+
+En el indice siguen pendientes:
 
 ```text
-Capitulo 1. Resumen
+9. Modelos de prediccion
+10. Metodologia de evaluacion
+11. Diseno de la aplicacion practica
+12. Implementacion del proyecto
+16. Discusion
+17. Conclusiones
+18. Lineas futuras
+19. Planificacion del proyecto
+20. Bibliografia y referencias
+21. Anexos
 ```
 
-Contenido:
+Los capitulos 13, 14 y 15 se desarrollaron antes que 9-12 porque el usuario lo solicito explicitamente.
 
-- contexto del mercado electrico
-- objetivo principal
-- metodologia
-- resultados esperados
-- aplicacion practica
-- contribuciones
-- alcance y limites
-- sintesis
+## 19. Commits principales
 
-Tiene aproximadamente 4.350 palabras.
-
-## 13. README
-
-Se amplio el `README.md` con:
-
-- emojis
-- tabla de contenidos
-- instalacion
-- uso GUI
-- uso CLI
-- modelos disponibles
-- integracion ESIOS
-- metricas
-- estructura del proyecto
-- GitHub con SSH
-- problemas frecuentes
-- referencias
-
-## 14. Git y commits principales
-
-Se inicializo el repositorio Git local.
-
-Commits relevantes:
+Commits relevantes del hilo:
 
 ```text
 bea9b74 Initial OMIE price forecasting app
@@ -468,79 +628,98 @@ f729fc1 Add documentation directory
 559175a Add TFG outline document
 c06ea63 Draft TFG chapter 1 summary
 b55effe Link TFG index to chapter files
+1643c89 Add structured development thread summary
+ff698a3 Draft TFG chapter 2 introduction
+86898a1 Draft TFG chapter 3 objectives
+50bda23 Rename TFG index document
+1d5d185 Draft TFG chapter 4 theoretical framework
+d186d3e Draft TFG chapter 5 state of the art
+71efa11 Draft TFG chapter 6 data sources
+7f00007 Align TFG index with developed chapters
+f069611 Draft TFG chapter 7 data preparation
+449201f Draft TFG chapter 8 feature engineering
+91082bc Draft TFG chapter 13 practical application
+a3950a9 Draft TFG chapters 14 and 15
 ```
 
-## 15. GitHub
+## 20. Problemas encontrados
 
-Repositorio remoto indicado:
+### 20.1. Autenticacion GitHub
+
+Los intentos de `git push` fallaron por falta de clave SSH autorizada en GitHub.
+
+Mensaje:
 
 ```text
-git@github.com:Ju4nC4r/omie_v2_python.git
+Permission denied (publickey).
 ```
 
-Tambien se uso inicialmente:
+Se explico como generar/configurar una SSH key en macOS.
 
-```text
-https://github.com/Ju4nC4r/omie_v2_python.git
-```
+### 20.2. Red y descargas
 
-Se intento subir a GitHub, pero fallo por autenticacion SSH:
+Algunas descargas pueden fallar por red, DNS o disponibilidad del servidor.
 
-```text
-Permission denied (publickey)
-```
-
-Queda pendiente configurar correctamente la clave SSH en GitHub y ejecutar:
-
-```bash
-git push -u origin main
-```
-
-## 16. Problemas encontrados
-
-### 16.1. Credenciales GitHub
-
-No se pudo hacer push por falta de autenticacion SSH valida.
-
-### 16.2. DNS / red en sandbox
-
-Algunas descargas fallaron inicialmente por bloqueo de red del entorno. Se relanzaron con permisos cuando fue necesario.
-
-### 16.3. Warning de joblib
-
-Aparecio un warning sobre numero de cores fisicos. Se mitigio configurando:
-
-```python
-LOKY_MAX_CPU_COUNT=1
-```
-
-### 16.4. Entrenamiento aparentemente bloqueado
-
-La GUI no mostraba progreso durante el entrenamiento. Se resolvio con:
-
-- barra de progreso
-- logs incrementales
-- callback de progreso
-
-### 16.5. OMIE con dias no disponibles
-
-Durante el entrenamiento de 2025 faltaron:
+En 2025, OMIE no devolvio ficheros para:
 
 ```text
 2025-10-30
 2025-11-27
 ```
 
-OMIE devolvio 404 para esos ficheros.
+### 20.3. Entrenamiento aparentemente bloqueado
 
-## 17. Proximos pasos sugeridos
+El entrenamiento, especialmente con `mlp` o `auto`, podia parecer parado. Se mejoro la GUI para mostrar progreso y logs.
 
-1. Configurar SSH correctamente y subir el repositorio a GitHub.
-2. Obtener token ESIOS y probar entrenamiento con `--include-esios`.
-3. Comparar rendimiento con y sin variables renovables.
-4. Anadir festivos nacionales y autonomicos.
-5. Desarrollar el capitulo 2 del TFG.
-6. Crear graficas y tablas para el capitulo de resultados.
-7. Implementar backtesting mensual.
-8. Ampliar inferencia para predecir el dia completo.
+### 20.4. Resolucion horaria y cuarto-horaria
 
+Se detecto que algunos datos pueden contener 24 periodos y otros 96 periodos.
+
+Esto afecta a la interpretacion de retardos como `lag 24`, que en horario equivale a un dia, pero en cuarto-horario equivale a seis horas.
+
+### 20.5. Inferencia con error puntual
+
+La prediccion para `2026-01-01 00:00` infraestimo el valor real. Se identifico la necesidad de incorporar festivos, demanda, meteorologia y otras variables externas.
+
+## 21. Proximos pasos sugeridos
+
+Pasos tecnicos:
+
+- configurar correctamente la SSH key de GitHub y subir el repositorio
+- desarrollar capitulos 9, 10, 11 y 12 para completar la parte metodologica/tecnica
+- desarrollar capitulos 16, 17 y 18 para discusion, conclusiones y lineas futuras
+- anadir festivos nacionales y autonomicos como variables
+- incorporar demanda prevista
+- incorporar meteorologia
+- mejorar retardos para que dependan de duracion real y no solo de numero de periodos
+- automatizar comparacion entre prediccion y valor real cuando OMIE publique el dato
+- crear backtesting mensual
+- estudiar importancia de variables
+
+Pasos documentales:
+
+- revisar estilo global de todos los capitulos
+- unificar terminologia
+- completar bibliografia
+- anadir figuras, tablas y diagramas
+- preparar anexos con comandos, estructura del proyecto y capturas de la GUI
+
+## 22. Estado actual resumido
+
+El proyecto ya cuenta con:
+
+- aplicacion Python funcional
+- entorno virtual preparado
+- descarga OMIE
+- integracion opcional ESIOS
+- tres modelos de entrenamiento y modo `auto`
+- interfaz grafica
+- comandos de consola
+- inferencia
+- README completo
+- repositorio Git con commits
+- documentacion TFG en `documents/`
+- capitulos 1, 2, 3, 4, 5, 6, 7, 8, 13, 14 y 15 desarrollados
+- indice actualizado con enlaces a los capitulos desarrollados
+
+El siguiente bloque natural de trabajo seria desarrollar los capitulos 9, 10, 11 y 12 para cerrar el hueco entre la ingenieria de variables y la aplicacion practica.
