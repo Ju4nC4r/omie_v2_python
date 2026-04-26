@@ -12,6 +12,7 @@
 - [Capitulo 6. Fuentes de datos](capitulo_06_fuentes_de_datos.md)
 - [Capitulo 7. Preparacion de datos](capitulo_07_preparacion_de_datos.md)
 - [Capitulo 8. Ingenieria de variables](capitulo_08_ingenieria_de_variables.md)
+- [Capitulo 13. Aplicacion practica desarrollada](capitulo_13_aplicacion_practica_desarrollada.md)
 
 > Nota: a medida que se desarrollen nuevos capitulos, se anadiran enlaces a sus ficheros Markdown correspondientes.
 
@@ -145,7 +146,7 @@
 12.8. Serializacion del modelo entrenado  
 12.9. Generacion de graficas de validacion  
 
-### 13. Aplicacion practica desarrollada _(pendiente de desarrollar)_
+### [13. Aplicacion practica desarrollada](capitulo_13_aplicacion_practica_desarrollada.md)
 
 13.1. Descripcion general de la aplicacion  
 13.2. Objetivo de la aplicacion  
