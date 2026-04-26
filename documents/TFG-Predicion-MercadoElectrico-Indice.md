@@ -11,6 +11,7 @@
 - [Capitulo 5. Estado del arte](capitulo_05_estado_del_arte.md)
 - [Capitulo 6. Fuentes de datos](capitulo_06_fuentes_de_datos.md)
 - [Capitulo 7. Preparacion de datos](capitulo_07_preparacion_de_datos.md)
+- [Capitulo 8. Ingenieria de variables](capitulo_08_ingenieria_de_variables.md)
 
 > Nota: a medida que se desarrollen nuevos capitulos, se anadiran enlaces a sus ficheros Markdown correspondientes.
 
@@ -86,7 +87,7 @@
 7.7. Construccion del dataset supervisado  
 7.8. Separacion temporal entre entrenamiento y validacion  
 
-### 8. Ingenieria de variables _(pendiente de desarrollar)_
+### [8. Ingenieria de variables](capitulo_08_ingenieria_de_variables.md)
 
 8.1. Variables de calendario  
 8.2. Variables ciclicas de hora, dia y mes  
