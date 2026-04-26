@@ -10,6 +10,7 @@
 - [Capitulo 4. Marco teorico](capitulo_04_marco_teorico.md)
 - [Capitulo 5. Estado del arte](capitulo_05_estado_del_arte.md)
 - [Capitulo 6. Fuentes de datos](capitulo_06_fuentes_de_datos.md)
+- [Capitulo 7. Preparacion de datos](capitulo_07_preparacion_de_datos.md)
 
 > Nota: a medida que se desarrollen nuevos capitulos, se anadiran enlaces a sus ficheros Markdown correspondientes.
 
@@ -74,7 +75,7 @@
 6.8. Problemas de disponibilidad y calidad de datos  
 6.9. Estrategia de cache y almacenamiento local  
 
-### 7. Preparacion de datos _(pendiente de desarrollar)_
+### [7. Preparacion de datos](capitulo_07_preparacion_de_datos.md)
 
 7.1. Descarga automatizada de datos OMIE  
 7.2. Descarga opcional de datos ESIOS  
