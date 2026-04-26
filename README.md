@@ -8,6 +8,7 @@ Incluye:
 - 🧠 Seleccion de modelo: `auto`, `ridge`, `mlp` o `hist_gradient_boosting`.
 - 📊 Validacion temporal con metricas `MAE`, `RMSE` y `R2`.
 - 🔮 Inferencia del siguiente periodo disponible.
+- 🌬️☀️ Variables opcionales de prevision eolica y solar desde ESIOS/REE.
 - 🧰 Comandos CLI para automatizar entrenamiento y prediccion.
 
 > ⚠️ Este proyecto es educativo/experimental. No debe usarse como senal fiable para decisiones economicas o de trading energetico.
@@ -56,10 +57,16 @@ data/raw/*.1
 Preparacion y limpieza
   ↓
 data/processed/omie_prices.csv
+  ↑
+  │ opcional
+  │
+ESIOS/REE
+  ↓
+prevision eolica + solar
   ↓
 Feature engineering
   ↓
-lags + calendario + medias moviles + volatilidad
+lags + calendario + medias moviles + volatilidad + renovables opcionales
   ↓
 Entrenamiento / test
   ↓
@@ -113,6 +120,14 @@ La ventana permite ejecutar las fases del modelo:
 5. 📈 **Abrir grafica:** abre la grafica de validacion.
 
 Si marcas **ESIOS**, la extraccion tambien anade prevision eolica y solar. Para ello necesitas indicar un token en el campo **Token ESIOS** o exportar la variable `ESIOS_TOKEN`.
+
+Flujo recomendado con ESIOS en la GUI:
+
+1. Escribe fechas de inicio y fin.
+2. Marca `ESIOS`.
+3. Pega tu token en `Token ESIOS`.
+4. Elige `auto` o un modelo concreto.
+5. Pulsa `Ejecutar todo`.
 
 ### Selector de modelo
 
@@ -329,7 +344,13 @@ Campos relevantes:
 
 ## 🌬️☀️ Datos eolicos y solares de ESIOS
 
-ESIOS es la API de datos del sistema electrico de Red Electrica. El proyecto puede usar tres indicadores de prevision:
+ESIOS es la API de datos del sistema electrico de Red Electrica. El proyecto puede usar previsiones de eolica y solar como variables externas del modelo.
+
+La motivacion es sencilla: el precio electrico no depende solo de su propia historia. Una alta prevision solar o eolica suele presionar precios a la baja, mientras que baja renovable puede coincidir con precios mas altos, especialmente si hay demanda elevada.
+
+### Indicadores usados
+
+El programa usa tres indicadores de prevision:
 
 | Indicador | Columna generada | Descripcion |
 |---|---|---|
@@ -337,25 +358,34 @@ ESIOS es la API de datos del sistema electrico de Red Electrica. El proyecto pue
 | `542` | `solar_pv_forecast_mwh` | Generacion prevista solar fotovoltaica. |
 | `543` | `solar_thermal_forecast_mwh` | Generacion prevista solar termica. |
 
-Ademas se crean columnas derivadas:
+### Columnas derivadas
+
+Ademas de las tres columnas originales, se crean variables agregadas:
 
 - `solar_forecast_mwh`
 - `renewable_forecast_mwh`
 - `wind_solar_ratio`
 
+Estas columnas se unen al dataset OMIE por `timestamp`. Si OMIE tiene periodos de 15 minutos y ESIOS viene horario, el programa usa la ultima prevision disponible dentro de una tolerancia de una hora.
+
 ### Configurar token
 
-El token puede pasarse de dos formas:
+Necesitas un token de ESIOS. Puedes pasarlo de dos formas.
+
+Opcion 1, variable de entorno:
 
 ```bash
 export ESIOS_TOKEN="tu_token_esios"
+omie-price-train --start 2025-01-01 --end 2025-03-31 --model auto --include-esios
 ```
 
-o:
+Opcion 2, argumento del comando:
 
 ```bash
-omie-price-train --start 2025-01-01 --end 2025-03-31 --include-esios --esios-token "tu_token_esios"
+omie-price-train --start 2025-01-01 --end 2025-03-31 --model auto --include-esios --esios-token "tu_token_esios"
 ```
+
+Si activas `--include-esios` sin token, el programa falla antes de modificar los datos.
 
 ### Que cambia en el modelo
 
@@ -369,6 +399,14 @@ Esto puede ayudar a capturar situaciones como:
 - diferencias entre dias laborales, fines de semana y festivos con mucha renovable
 
 Los datos ESIOS se cachean en `data/processed/esios_generation_YYYYMMDD_YYYYMMDD.csv`.
+
+### Importante para inferencia
+
+Si entrenas un modelo con ESIOS, el CSV usado en inferencia debe conservar esas columnas externas. El flujo normal lo hace automaticamente porque guarda el dataset enriquecido en:
+
+```text
+data/processed/omie_prices.csv
+```
 
 ## 🧪 Variables del modelo
 
@@ -423,6 +461,7 @@ Baseline lag 24 MAE: 20.97 EUR/MWh
 | `data/raw/` | Ficheros originales descargados de OMIE. |
 | `data/processed/omie_prices.csv` | Dataset limpio de precios. |
 | `data/processed/omie_features.csv` | Dataset supervisado generado desde la GUI. |
+| `data/processed/esios_generation_*.csv` | Cache de prevision eolica/solar de ESIOS. |
 | `models/omie_model.joblib` | Modelo entrenado y serializado. |
 | `models/validation_plot.png` | Grafica de validacion. |
 
