@@ -20,6 +20,9 @@
 1.3. Metodologia empleada  
 1.4. Resultados esperados  
 1.5. Aplicacion practica desarrollada  
+1.6. Contribuciones del trabajo  
+1.7. Alcance y limites del resumen  
+1.8. Sintesis del capitulo  
 
 ### [2. Introduccion](capitulo_02_introduccion.md)
 
