@@ -38,6 +38,8 @@ class OmiePriceApp:
         self.features_var = StringVar(value="-")
         self.model_var = StringVar(value="-")
         self.prediction_var = StringVar(value="-")
+        self.current_start = parse_date(self.start_var.get())
+        self.current_end = parse_date(self.end_var.get())
 
         self._build_ui()
         self.root.after(150, self._poll_events)
@@ -56,6 +58,8 @@ class OmiePriceApp:
         ttk.Entry(header, width=14, textvariable=self.end_var).grid(row=0, column=3, padx=(6, 18))
         ttk.Button(header, text="Ejecutar todo", command=self.run_all).grid(row=0, column=4, padx=(0, 8))
         ttk.Label(header, textvariable=self.status_var).grid(row=0, column=5, sticky="e")
+        self.progress = ttk.Progressbar(header, mode="indeterminate", length=150)
+        self.progress.grid(row=1, column=0, columnspan=6, sticky="ew", pady=(10, 0))
 
         phases = ttk.Frame(self.root, padding=(14, 0, 14, 8))
         phases.grid(row=1, column=0, sticky="ew")
@@ -109,9 +113,13 @@ class OmiePriceApp:
         ttk.Label(frame, textvariable=value, font=("", 12, "bold")).pack(anchor="w")
 
     def run_all(self) -> None:
+        if not self._capture_date_range():
+            return
         self._run_task("Flujo completo", self._run_all_steps)
 
     def extract_data(self) -> None:
+        if not self._capture_date_range():
+            return
         self._run_task("Extraccion de datos", self._extract_data)
 
     def prepare_data(self) -> None:
@@ -139,6 +147,7 @@ class OmiePriceApp:
         self.is_running = True
         self.status_var.set(f"Ejecutando: {name}")
         self._set_buttons_state("disabled")
+        self.progress.start(12)
         thread = threading.Thread(target=self._thread_wrapper, args=(name, target), daemon=True)
         thread.start()
 
@@ -171,11 +180,13 @@ class OmiePriceApp:
                 self._append_log(f"{payload}\n")
                 self.status_var.set("Listo")
                 self.is_running = False
+                self.progress.stop()
                 self._set_buttons_state("normal")
             elif event == "error":
                 self._append_log(f"ERROR\n{payload}\n")
                 self.status_var.set("Error")
                 self.is_running = False
+                self.progress.stop()
                 self._set_buttons_state("normal")
 
         self.root.after(150, self._poll_events)
@@ -195,12 +206,18 @@ class OmiePriceApp:
         self.log.insert(END, text)
         self.log.see(END)
 
-    def _date_range(self):
-        start = parse_date(self.start_var.get().strip())
-        end = parse_date(self.end_var.get().strip())
-        if start > end:
-            raise ValueError("La fecha inicial no puede ser posterior a la fecha final.")
-        return start, end
+    def _capture_date_range(self) -> bool:
+        try:
+            start = parse_date(self.start_var.get().strip())
+            end = parse_date(self.end_var.get().strip())
+            if start > end:
+                raise ValueError("La fecha inicial no puede ser posterior a la fecha final.")
+        except Exception as exc:
+            messagebox.showerror("Fechas invalidas", str(exc))
+            return False
+        self.current_start = start
+        self.current_end = end
+        return True
 
     def _run_all_steps(self) -> None:
         self._extract_data()
@@ -209,7 +226,7 @@ class OmiePriceApp:
         self._infer()
 
     def _extract_data(self) -> pd.DataFrame:
-        start, end = self._date_range()
+        start, end = self.current_start, self.current_end
         self.events.put(("log", f"Descargando OMIE desde {start} hasta {end}...\n"))
         data = load_omie_prices(start, end, OmieConfig())
         self.events.put(("data", f"{len(data)} filas en {DATA_PATH}"))
@@ -236,7 +253,7 @@ class OmiePriceApp:
     def _train_and_test(self):
         data = self._load_processed_data()
         self.events.put(("log", "Entrenando candidatos y evaluando validacion temporal...\n"))
-        metrics = train_model(data, MODEL_PATH, PLOT_PATH)
+        metrics = train_model(data, MODEL_PATH, PLOT_PATH, progress_callback=self._report_progress)
         self.events.put(("model", f"{metrics['best_model']} | MAE {metrics['mae']:.2f}"))
         self.events.put(
             (
@@ -259,6 +276,9 @@ class OmiePriceApp:
             )
         self.events.put(("log", f"Modelo guardado en {MODEL_PATH}\nGrafica guardada en {PLOT_PATH}\n"))
         return metrics
+
+    def _report_progress(self, message: str) -> None:
+        self.events.put(("log", f"{message}\n"))
 
     def _infer(self) -> float:
         if not MODEL_PATH.exists():

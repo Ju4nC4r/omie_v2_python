@@ -3,16 +3,19 @@ from __future__ import annotations
 import argparse
 import os
 from pathlib import Path
+from typing import Callable
 
 os.environ.setdefault("MPLCONFIGDIR", str(Path("data/.matplotlib").resolve()))
 os.environ.setdefault("LOKY_MAX_CPU_COUNT", "1")
 
 import joblib
+import matplotlib
 import pandas as pd
 from sklearn.ensemble import HistGradientBoostingRegressor
 from sklearn.linear_model import RidgeCV
 from sklearn.metrics import mean_absolute_error, r2_score
 
+matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
 try:
@@ -31,7 +34,20 @@ from .data import OmieConfig, load_omie_prices, parse_date
 from .features import make_supervised_dataset
 
 
-def train_model(data: pd.DataFrame, model_path: Path, plot_path: Path):
+ProgressCallback = Callable[[str], None]
+
+
+def train_model(
+    data: pd.DataFrame,
+    model_path: Path,
+    plot_path: Path,
+    progress_callback: ProgressCallback | None = None,
+):
+    def report(message: str) -> None:
+        if progress_callback:
+            progress_callback(message)
+
+    report("Construyendo dataset supervisado...")
     x, y = make_supervised_dataset(data)
     if len(x) < 700:
         raise ValueError("Not enough rows after feature creation. Use a wider date range.")
@@ -85,7 +101,9 @@ def train_model(data: pd.DataFrame, model_path: Path, plot_path: Path):
     best_mae = float("inf")
 
     for name, candidate in candidates.items():
+        report(f"Entrenando candidato: {name}...")
         candidate.fit(x_train, y_train)
+        report(f"Evaluando candidato: {name}...")
         candidate_predictions = candidate.predict(x_test)
         candidate_mae = mean_absolute_error(y_test, candidate_predictions)
         candidate_metrics[name] = {
@@ -98,10 +116,12 @@ def train_model(data: pd.DataFrame, model_path: Path, plot_path: Path):
             best_model = candidate
             best_predictions = candidate_predictions
             best_mae = candidate_mae
+        report(f"Candidato {name} completado: MAE {candidate_mae:.2f} EUR/MWh")
 
     if best_model is None or best_predictions is None:
         raise RuntimeError("No model candidate could be trained.")
 
+    report(f"Mejor candidato: {best_name}. Guardando modelo y grafica...")
     predictions = best_predictions
     baseline = x_test["price_lag_24"].to_numpy()
     metrics = {
