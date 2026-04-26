@@ -13,6 +13,8 @@
 - [Capitulo 7. Preparacion de datos](capitulo_07_preparacion_de_datos.md)
 - [Capitulo 8. Ingenieria de variables](capitulo_08_ingenieria_de_variables.md)
 - [Capitulo 13. Aplicacion practica desarrollada](capitulo_13_aplicacion_practica_desarrollada.md)
+- [Capitulo 14. Informacion concreta del proyecto implementado](capitulo_14_informacion_concreta_proyecto.md)
+- [Capitulo 15. Resultados experimentales](capitulo_15_resultados_experimentales.md)
 
 > Nota: a medida que se desarrollen nuevos capitulos, se anadiran enlaces a sus ficheros Markdown correspondientes.
 
@@ -159,7 +161,7 @@
 13.9. Inferencia del siguiente periodo  
 13.10. Comparacion entre prediccion y valor real  
 
-### 14. Informacion concreta del proyecto implementado _(pendiente de desarrollar)_
+### [14. Informacion concreta del proyecto implementado](capitulo_14_informacion_concreta_proyecto.md)
 
 14.1. Nombre del proyecto: `omie_v2_python`  
 14.2. Lenguaje utilizado: Python  
@@ -172,7 +174,7 @@
 14.9. Modelo guardado: `models/omie_model.joblib`  
 14.10. Grafica generada: `models/validation_plot.png`  
 
-### 15. Resultados experimentales _(pendiente de desarrollar)_
+### [15. Resultados experimentales](capitulo_15_resultados_experimentales.md)
 
 15.1. Entrenamiento con datos de enero a marzo de 2025  
 15.2. Entrenamiento con datos de todo 2025  
