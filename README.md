@@ -1,97 +1,185 @@
-# Prediccion del precio electrico espanol con OMIE
+# ⚡ OMIE v2 Python - Prediccion del precio electrico espanol
 
-Proyecto para estimar el precio del mercado diario electrico espanol usando datos publicos de OMIE. Incluye una interfaz grafica para ejecutar el flujo completo y comandos de consola para automatizar cada fase.
+Proyecto en Python para **descargar datos publicos de OMIE**, preparar una serie temporal supervisada y entrenar modelos capaces de estimar el precio del mercado diario electrico espanol.
 
-El proyecto descarga precios, prepara una serie temporal supervisada, entrena varios modelos, compara metricas y genera una prediccion para el siguiente periodo disponible.
+Incluye:
 
-## Resumen
+- 🖥️ Interfaz grafica con fases visibles del flujo.
+- 🧠 Seleccion de modelo: `auto`, `ridge`, `mlp` o `hist_gradient_boosting`.
+- 📊 Validacion temporal con metricas `MAE`, `RMSE` y `R2`.
+- 🔮 Inferencia del siguiente periodo disponible.
+- 🧰 Comandos CLI para automatizar entrenamiento y prediccion.
 
-- Fuente: ficheros publicos `MARGINALPDBC` de OMIE.
-- Objetivo: `marginal_es`, precio marginal espanol en EUR/MWh.
-- Modelos candidatos: `RidgeCV`, `MLPRegressor` y `HistGradientBoostingRegressor`.
-- Seleccion: puedes elegir un modelo concreto o usar `auto` para guardar el candidato con menor MAE.
-- Interfaz: ventana con fases de extraccion, preparacion, entrenamiento, test e inferencia.
-- Salida principal: `models/omie_model.joblib` y `models/validation_plot.png`.
+> ⚠️ Este proyecto es educativo/experimental. No debe usarse como senal fiable para decisiones economicas o de trading energetico.
 
-## Arranque rapido
+## 📚 Tabla de contenidos
 
-Crear entorno virtual e instalar el proyecto:
+- [Resumen](#-resumen)
+- [Arquitectura del flujo](#-arquitectura-del-flujo)
+- [Instalacion](#-instalacion)
+- [Uso con interfaz grafica](#-uso-con-interfaz-grafica)
+- [Uso por consola](#-uso-por-consola)
+- [Modelos disponibles](#-modelos-disponibles)
+- [Datos de OMIE](#-datos-de-omie)
+- [Variables del modelo](#-variables-del-modelo)
+- [Metricas](#-metricas)
+- [Artefactos generados](#-artefactos-generados)
+- [Estructura del proyecto](#-estructura-del-proyecto)
+- [GitHub con SSH](#-github-con-ssh)
+- [Problemas frecuentes](#-problemas-frecuentes)
+- [Ideas de mejora](#-ideas-de-mejora)
+
+## 🚀 Resumen
+
+El proyecto trabaja con el precio marginal espanol publicado por OMIE:
+
+- **Fuente:** ficheros publicos `MARGINALPDBC`.
+- **Objetivo:** `marginal_es`, precio marginal espanol en `EUR/MWh`.
+- **Frecuencia:** horaria y preparada para periodos de 15 minutos cuando OMIE los publique en el fichero.
+- **Modelos:** `RidgeCV`, `MLPRegressor`, `HistGradientBoostingRegressor`.
+- **Modo recomendado:** `auto`, que prueba los tres modelos y guarda el que obtiene menor `MAE`.
+- **Salida principal:** `models/omie_model.joblib`.
+- **Grafica:** `models/validation_plot.png`.
+
+## 🧭 Arquitectura del flujo
+
+```text
+OMIE
+  ↓
+Extraccion de datos
+  ↓
+data/raw/*.1
+  ↓
+Preparacion y limpieza
+  ↓
+data/processed/omie_prices.csv
+  ↓
+Feature engineering
+  ↓
+lags + calendario + medias moviles + volatilidad
+  ↓
+Entrenamiento / test
+  ↓
+RidgeCV | MLPRegressor | HistGradientBoostingRegressor
+  ↓
+models/omie_model.joblib
+  ↓
+Inferencia siguiente periodo
+```
+
+## 🛠️ Instalacion
+
+Desde la carpeta del proyecto:
 
 ```bash
+cd /Users/juancarlos/temporal/kk
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 pip install -e .
 ```
 
-Abrir la interfaz grafica:
+Comprobar que los comandos estan disponibles:
 
 ```bash
+omie-price-train --help
+omie-price-predict --help
+```
+
+## 🖥️ Uso con interfaz grafica
+
+Abrir la aplicacion:
+
+```bash
+source .venv/bin/activate
 omie-price-gui
 ```
 
-Tambien funciona con:
+Alternativa:
 
 ```bash
 python -m omie_price_nn.gui
 ```
 
-En la ventana puedes elegir el modelo y ejecutar las fases una a una o pulsar `Ejecutar todo`.
+La ventana permite ejecutar las fases del modelo:
 
-## Interfaz grafica
+1. 📥 **Extraccion:** descarga datos diarios de OMIE.
+2. 🧹 **Preparacion:** genera el dataset supervisado.
+3. 🧠 **Entrenamiento + test:** entrena el modelo elegido y calcula metricas.
+4. 🔮 **Inferencia:** predice el siguiente periodo.
+5. 📈 **Abrir grafica:** abre la grafica de validacion.
 
-La interfaz esta pensada para ver claramente el ciclo del modelo:
+### Selector de modelo
 
-1. `Extraccion`: descarga datos diarios de OMIE y los guarda en cache.
-2. `Preparacion`: genera variables temporales y retardos para entrenamiento.
-3. `Entrenamiento + test`: entrena el modelo seleccionado, valida y muestra metricas.
-4. `Inferencia`: predice el siguiente periodo despues del ultimo dato disponible.
-5. `Abrir grafica`: abre la comparacion entre valores reales, modelo y baseline.
+En el desplegable **Modelo** puedes elegir:
 
-El desplegable `Modelo` permite elegir:
+| Opcion | Que hace |
+|---|---|
+| `auto` | Entrena los tres modelos y guarda el que obtiene menor `MAE`. |
+| `ridge` | Entrena solo `RidgeCV`. |
+| `mlp` | Entrena solo la red neuronal `MLPRegressor`. |
+| `hist_gradient_boosting` | Entrena solo `HistGradientBoostingRegressor`. |
 
-- `auto`: entrena los tres candidatos y guarda el de menor MAE.
-- `ridge`: entrena solo `RidgeCV`.
-- `mlp`: entrena solo la red neuronal `MLPRegressor`.
-- `hist_gradient_boosting`: entrena solo `HistGradientBoostingRegressor`.
+## ⌨️ Uso por consola
 
-Los logs de la ventana muestran el progreso, metricas, errores y artefactos generados.
-
-## Uso por consola
-
-Entrenar con un ano de datos:
+Entrenar en modo automatico:
 
 ```bash
-omie-price-train --start 2024-01-01 --end 2024-12-31
+omie-price-train --start 2025-01-01 --end 2025-03-31 --model auto
 ```
 
-Elegir un modelo concreto:
+Entrenar solo la red neuronal:
 
 ```bash
-omie-price-train --start 2024-01-01 --end 2024-12-31 --model mlp
+omie-price-train --start 2025-01-01 --end 2025-03-31 --model mlp
 ```
 
-Equivalente con modulo Python:
+Entrenar solo Ridge:
 
 ```bash
-python -m omie_price_nn.train --start 2024-01-01 --end 2024-12-31 --model auto
+omie-price-train --start 2025-01-01 --end 2025-03-31 --model ridge
 ```
 
-Predecir el siguiente periodo:
+Entrenar solo Gradient Boosting:
+
+```bash
+omie-price-train --start 2025-01-01 --end 2025-03-31 --model hist_gradient_boosting
+```
+
+Predecir el siguiente periodo con el modelo guardado:
 
 ```bash
 omie-price-predict
 ```
 
-Equivalente:
+Tambien puedes usar los modulos directamente:
 
 ```bash
+python -m omie_price_nn.train --start 2025-01-01 --end 2025-03-31 --model auto
 python -m omie_price_nn.predict
 ```
 
-## Datos OMIE
+## 🧠 Modelos disponibles
 
-El proyecto usa el fichero diario `MARGINALPDBC`:
+### `ridge`
+
+`RidgeCV` es una regresion lineal regularizada. Es rapida, estable y suele funcionar bien cuando las variables historicas explican una parte importante del precio.
+
+### `mlp`
+
+`MLPRegressor` es una red neuronal sencilla con capas densas. Puede aprender relaciones no lineales, aunque necesita suficientes datos y puede tardar mas en entrenar.
+
+### `hist_gradient_boosting`
+
+`HistGradientBoostingRegressor` es un modelo de arboles con boosting. Suele capturar no linealidades y cambios de regimen mejor que una regresion lineal simple.
+
+### `auto`
+
+Entrena los tres candidatos, compara el `MAE` en validacion temporal y guarda el mejor.
+
+## 📦 Datos de OMIE
+
+El proyecto descarga ficheros `MARGINALPDBC` desde OMIE:
 
 ```text
 https://www.omie.es/es/file-download?parents%5B0%5D=marginalpdbc&filename=marginalpdbc_YYYYMMDD.1
@@ -103,75 +191,42 @@ Formato esperado:
 anio;mes;dia;periodo;marginal_pt;marginal_es;
 ```
 
-El parser soporta datos horarios y tambien periodos recientes de 15 minutos cuando el fichero tiene mas de 25 periodos por dia.
+Campos relevantes:
 
-## Flujo interno
+- `periodo`: periodo horario o cuarto-horario.
+- `marginal_pt`: precio marginal Portugal.
+- `marginal_es`: precio marginal Espana, usado como objetivo.
 
-Durante el entrenamiento:
+## 🧪 Variables del modelo
 
-1. Descarga los ficheros diarios de OMIE.
-2. Guarda los originales en `data/raw/`.
-3. Genera `data/processed/omie_prices.csv`.
-4. Crea variables de calendario, retardos, medias moviles y cambios recientes.
-5. Entrena el modelo elegido, o todos si la seleccion es `auto`.
-6. Evalua con validacion temporal, sin mezclar futuro con pasado.
-7. Guarda el modelo seleccionado en `models/omie_model.joblib`.
-8. Guarda la grafica de validacion en `models/validation_plot.png`.
+Los modelos no usan todavia variables externas. Aprenden a partir de informacion historica del propio precio:
 
-## Estructura
+- 🕒 momento del dia
+- 📅 dia de la semana
+- 🗓️ mes
+- 🛌 indicador de fin de semana
+- ⏪ precios retardados de `1`, `2`, `3`, `4`, `5`, `6`, `12`, `23`, `24`, `25`, `48`, `72`, `168` y `336` periodos
+- 📉 medias moviles de `3`, `6`, `12`, `24`, `48` y `168` periodos
+- 📊 desviaciones moviles de `3`, `6`, `12`, `24`, `48` y `168` periodos
+- 🔻 minimos y maximos moviles de `24` y `168` periodos
+- 🔁 diferencias frente al periodo anterior, el dia anterior y la semana anterior
+- ➗ ratios frente al dia anterior y la semana anterior
 
-```text
-.
-├── data/
-│   ├── raw/                 # ficheros originales descargados de OMIE
-│   └── processed/           # CSV limpios y dataset preparado
-├── models/                  # modelo entrenado y grafica de validacion
-├── src/omie_price_nn/
-│   ├── data.py              # descarga y parseo de OMIE
-│   ├── features.py          # variables temporales y retardos
-│   ├── train.py             # entrenamiento y seleccion del mejor candidato
-│   ├── predict.py           # inferencia con el modelo entrenado
-│   └── gui.py               # interfaz grafica
-├── requirements.txt
-└── pyproject.toml
-```
+## 📏 Metricas
 
-## Artefactos generados
+Durante el test se calculan:
 
-- `data/raw/`: ficheros OMIE originales cacheados.
-- `data/processed/omie_prices.csv`: precios limpios.
-- `data/processed/omie_features.csv`: dataset supervisado generado desde la GUI.
-- `models/omie_model.joblib`: mejor modelo entrenado.
-- `models/validation_plot.png`: grafica de validacion.
-
-## Variables del modelo
-
-Los modelos usan informacion historica derivada del propio precio:
-
-- momento del dia
-- dia de la semana
-- mes
-- indicador de fin de semana
-- precios retardados de 1, 2, 3, 4, 5, 6, 12, 23, 24, 25, 48, 72, 168 y 336 periodos
-- medias y desviaciones moviles de 3, 6, 12, 24, 48 y 168 periodos
-- minimos y maximos moviles de 24 y 168 periodos
-- diferencias frente al periodo anterior, el dia anterior y la semana anterior
-- ratios frente al dia anterior y la semana anterior
-
-## Metricas
-
-El entrenamiento muestra:
-
-```text
-MAE: error absoluto medio en EUR/MWh. Mas bajo es mejor.
-RMSE: penaliza mas los errores grandes. Mas bajo es mejor.
-R2: proporcion de variacion explicada. Mas cercano a 1 es mejor.
-Baseline lag 24 MAE: comparacion contra usar el precio de 24 periodos antes.
-```
+| Metrica | Significado | Interpretacion |
+|---|---|---|
+| `MAE` | Error absoluto medio en `EUR/MWh`. | Mas bajo es mejor. |
+| `RMSE` | Penaliza mas los errores grandes. | Mas bajo es mejor. |
+| `R2` | Proporcion de variacion explicada. | Mas cercano a `1` es mejor. |
+| `Baseline lag 24 MAE` | Error usando el precio de 24 periodos antes. | Sirve como comparacion simple. |
 
 Ejemplo real con datos de `2025-01-01` a `2025-03-31`:
 
 ```text
+Seleccion solicitada: auto
 Mejor modelo: ridge
 MAE: 10.02 EUR/MWh
 RMSE: 15.70 EUR/MWh
@@ -179,26 +234,74 @@ R2: 0.871
 Baseline lag 24 MAE: 20.97 EUR/MWh
 ```
 
-## Limitaciones
+## 📁 Artefactos generados
 
-El modelo actual no usa factores externos. Para mejorar precision seria razonable anadir:
+| Ruta | Contenido |
+|---|---|
+| `data/raw/` | Ficheros originales descargados de OMIE. |
+| `data/processed/omie_prices.csv` | Dataset limpio de precios. |
+| `data/processed/omie_features.csv` | Dataset supervisado generado desde la GUI. |
+| `models/omie_model.joblib` | Modelo entrenado y serializado. |
+| `models/validation_plot.png` | Grafica de validacion. |
 
-- demanda prevista
-- produccion eolica y solar
-- temperatura y meteorologia
-- precio del gas
-- derechos de CO2
-- indisponibilidades de generacion
-- interconexiones
-- restricciones tecnicas e intradiario
+Los datos, modelos y caches estan excluidos de Git mediante `.gitignore`.
 
-Por eso las predicciones deben interpretarse como un ejercicio de aprendizaje y no como una senal fiable para decisiones economicas.
+## 🗂️ Estructura del proyecto
 
-## Problemas frecuentes
+```text
+.
+├── data/
+│   ├── raw/
+│   └── processed/
+├── models/
+├── src/omie_price_nn/
+│   ├── __init__.py
+│   ├── data.py
+│   ├── features.py
+│   ├── gui.py
+│   ├── predict.py
+│   └── train.py
+├── .gitignore
+├── README.md
+├── pyproject.toml
+└── requirements.txt
+```
 
-### No se abre la interfaz grafica
+## 🔐 GitHub con SSH
 
-Comprueba que estas dentro del entorno virtual y que instalaste el paquete:
+Para subir el proyecto a GitHub usando SSH:
+
+```bash
+ssh-keygen -t ed25519 -C "tu_email_de_github@example.com"
+eval "$(ssh-agent -s)"
+ssh-add --apple-use-keychain ~/.ssh/id_ed25519
+pbcopy < ~/.ssh/id_ed25519.pub
+```
+
+Despues pega la clave publica en:
+
+```text
+GitHub → Settings → SSH and GPG keys → New SSH key
+```
+
+Probar conexion:
+
+```bash
+ssh -T git@github.com
+```
+
+Configurar remoto SSH:
+
+```bash
+git remote set-url origin git@github.com:Ju4nC4r/omie_v2_python.git
+git push -u origin main
+```
+
+## 🧯 Problemas frecuentes
+
+### 🖥️ No se abre la interfaz grafica
+
+Activa el entorno e instala el paquete local:
 
 ```bash
 source .venv/bin/activate
@@ -206,30 +309,35 @@ pip install -e .
 omie-price-gui
 ```
 
-### No descarga datos de OMIE
+### 🌐 No descarga datos de OMIE
 
-Comprueba que hay conexion a internet y que OMIE responde para la fecha elegida. Los datos se descargan desde `www.omie.es`.
+Comprueba que hay conexion a internet y que OMIE responde para la fecha elegida.
 
-### Hay pocos datos para entrenar
+### ⏳ El entrenamiento parece parado
 
-Usa un rango mayor. El proyecto crea retardos de hasta 336 periodos y exige al menos 700 filas utiles despues de construir variables, asi que funciona mejor con varios meses.
+La GUI muestra barra de progreso y logs por candidato. Si entrenas `mlp`, puede tardar mas que `ridge`.
 
-### Quiero repetir el entrenamiento desde cero
+### 📉 Hay pocos datos para entrenar
 
-Puedes borrar los artefactos generados:
+El proyecto usa retardos de hasta `336` periodos y exige al menos `700` filas utiles despues de construir variables. Usa varios meses de datos.
+
+### 🧹 Repetir entrenamiento desde cero
+
+Puedes borrar artefactos generados:
 
 ```bash
 rm -f data/processed/omie_prices.csv data/processed/omie_features.csv
 rm -f models/omie_model.joblib models/validation_plot.png
 ```
 
-Los ficheros en `data/raw/` se pueden conservar como cache para no volver a descargarlos.
+Conservar `data/raw/` evita descargar otra vez los ficheros ya cacheados.
 
-## Ideas de mejora
+## 🧭 Ideas de mejora
 
-- Anadir datos de demanda y generacion de REE/ESIOS.
-- Incluir variables meteorologicas por zona.
-- Probar modelos especificos para series temporales.
-- Separar validacion por meses completos.
-- Guardar historico de experimentos con parametros y metricas.
-- Crear un notebook de analisis exploratorio.
+- 🌡️ Anadir meteorologia por zona.
+- ⚡ Incorporar demanda y generacion de REE/ESIOS.
+- ☀️ Separar variables de solar, eolica, hidraulica y nuclear.
+- 🌍 Incluir gas, CO2 e interconexiones.
+- 🧪 Guardar historico de experimentos y parametros.
+- 📓 Crear notebooks de analisis exploratorio.
+- 🧠 Probar modelos especificos de series temporales.
