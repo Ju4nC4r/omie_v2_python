@@ -35,28 +35,11 @@ from .features import make_supervised_dataset
 
 
 ProgressCallback = Callable[[str], None]
+MODEL_CHOICES = ("auto", "ridge", "mlp", "hist_gradient_boosting")
 
 
-def train_model(
-    data: pd.DataFrame,
-    model_path: Path,
-    plot_path: Path,
-    progress_callback: ProgressCallback | None = None,
-):
-    def report(message: str) -> None:
-        if progress_callback:
-            progress_callback(message)
-
-    report("Construyendo dataset supervisado...")
-    x, y = make_supervised_dataset(data)
-    if len(x) < 700:
-        raise ValueError("Not enough rows after feature creation. Use a wider date range.")
-
-    split_at = int(len(x) * 0.8)
-    x_train, x_test = x.iloc[:split_at], x.iloc[split_at:]
-    y_train, y_test = y.iloc[:split_at], y.iloc[split_at:]
-
-    candidates = {
+def build_model_candidates():
+    return {
         "ridge": make_pipeline(
             RobustScaler(),
             TransformedTargetRegressor(
@@ -94,6 +77,34 @@ def train_model(
         ),
     }
 
+
+def train_model(
+    data: pd.DataFrame,
+    model_path: Path,
+    plot_path: Path,
+    model_choice: str = "auto",
+    progress_callback: ProgressCallback | None = None,
+):
+    def report(message: str) -> None:
+        if progress_callback:
+            progress_callback(message)
+
+    report("Construyendo dataset supervisado...")
+    if model_choice not in MODEL_CHOICES:
+        raise ValueError(f"Unknown model choice {model_choice!r}. Valid choices: {', '.join(MODEL_CHOICES)}")
+
+    x, y = make_supervised_dataset(data)
+    if len(x) < 700:
+        raise ValueError("Not enough rows after feature creation. Use a wider date range.")
+
+    split_at = int(len(x) * 0.8)
+    x_train, x_test = x.iloc[:split_at], x.iloc[split_at:]
+    y_train, y_test = y.iloc[:split_at], y.iloc[split_at:]
+
+    candidates = build_model_candidates()
+    if model_choice != "auto":
+        candidates = {model_choice: candidates[model_choice]}
+
     candidate_metrics = {}
     best_name = ""
     best_model = None
@@ -111,7 +122,7 @@ def train_model(
             "rmse": root_mean_squared_error(y_test, candidate_predictions),
             "r2": r2_score(y_test, candidate_predictions),
         }
-        if candidate_mae < best_mae:
+        if model_choice == name or candidate_mae < best_mae:
             best_name = name
             best_model = candidate
             best_predictions = candidate_predictions
@@ -126,6 +137,7 @@ def train_model(
     baseline = x_test["price_lag_24"].to_numpy()
     metrics = {
         "best_model": best_name,
+        "model_choice": model_choice,
         "mae": mean_absolute_error(y_test, predictions),
         "rmse": root_mean_squared_error(y_test, predictions),
         "r2": r2_score(y_test, predictions),
@@ -162,12 +174,19 @@ def main() -> None:
     parser.add_argument("--end", required=True, help="Fecha final YYYY-MM-DD")
     parser.add_argument("--model-path", default="models/omie_model.joblib")
     parser.add_argument("--plot-path", default="models/validation_plot.png")
+    parser.add_argument(
+        "--model",
+        choices=MODEL_CHOICES,
+        default="auto",
+        help="Modelo a entrenar. auto prueba todos y guarda el de menor MAE.",
+    )
     args = parser.parse_args()
 
     data = load_omie_prices(parse_date(args.start), parse_date(args.end), OmieConfig())
-    metrics = train_model(data, Path(args.model_path), Path(args.plot_path))
+    metrics = train_model(data, Path(args.model_path), Path(args.plot_path), model_choice=args.model)
 
     print("Entrenamiento completado")
+    print(f"Seleccion solicitada: {metrics['model_choice']}")
     print(f"Mejor modelo: {metrics['best_model']}")
     print(f"MAE: {metrics['mae']:.2f} EUR/MWh")
     print(f"RMSE: {metrics['rmse']:.2f} EUR/MWh")

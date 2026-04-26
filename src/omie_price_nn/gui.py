@@ -14,7 +14,7 @@ import pandas as pd
 
 from .data import OmieConfig, load_omie_prices, parse_date
 from .features import make_next_prediction_features, make_supervised_dataset
-from .train import train_model
+from .train import MODEL_CHOICES, train_model
 
 
 DATA_PATH = Path("data/processed/omie_prices.csv")
@@ -38,8 +38,10 @@ class OmiePriceApp:
         self.features_var = StringVar(value="-")
         self.model_var = StringVar(value="-")
         self.prediction_var = StringVar(value="-")
+        self.training_choice_var = StringVar(value="auto")
         self.current_start = parse_date(self.start_var.get())
         self.current_end = parse_date(self.end_var.get())
+        self.current_model_choice = self.training_choice_var.get()
 
         self._build_ui()
         self.root.after(150, self._poll_events)
@@ -50,16 +52,25 @@ class OmiePriceApp:
 
         header = ttk.Frame(self.root, padding=14)
         header.grid(row=0, column=0, sticky="ew")
-        header.columnconfigure(5, weight=1)
+        header.columnconfigure(7, weight=1)
 
         ttk.Label(header, text="Fecha inicio").grid(row=0, column=0, sticky="w")
         ttk.Entry(header, width=14, textvariable=self.start_var).grid(row=0, column=1, padx=(6, 18))
         ttk.Label(header, text="Fecha fin").grid(row=0, column=2, sticky="w")
         ttk.Entry(header, width=14, textvariable=self.end_var).grid(row=0, column=3, padx=(6, 18))
-        ttk.Button(header, text="Ejecutar todo", command=self.run_all).grid(row=0, column=4, padx=(0, 8))
-        ttk.Label(header, textvariable=self.status_var).grid(row=0, column=5, sticky="e")
+        ttk.Label(header, text="Modelo").grid(row=0, column=4, sticky="w")
+        self.training_choice = ttk.Combobox(
+            header,
+            width=22,
+            textvariable=self.training_choice_var,
+            values=MODEL_CHOICES,
+            state="readonly",
+        )
+        self.training_choice.grid(row=0, column=5, padx=(6, 18), sticky="w")
+        ttk.Button(header, text="Ejecutar todo", command=self.run_all).grid(row=0, column=6, padx=(0, 8))
+        ttk.Label(header, textvariable=self.status_var).grid(row=0, column=7, sticky="e")
         self.progress = ttk.Progressbar(header, mode="indeterminate", length=150)
-        self.progress.grid(row=1, column=0, columnspan=6, sticky="ew", pady=(10, 0))
+        self.progress.grid(row=1, column=0, columnspan=8, sticky="ew", pady=(10, 0))
 
         phases = ttk.Frame(self.root, padding=(14, 0, 14, 8))
         phases.grid(row=1, column=0, sticky="ew")
@@ -126,6 +137,8 @@ class OmiePriceApp:
         self._run_task("Preparacion de datos", self._prepare_data)
 
     def train_and_test(self) -> None:
+        if not self._capture_date_range():
+            return
         self._run_task("Entrenamiento y test", self._train_and_test)
 
     def infer(self) -> None:
@@ -201,6 +214,7 @@ class OmiePriceApp:
             self.clear_button,
         ):
             button.configure(state=state)
+        self.training_choice.configure(state="disabled" if state == "disabled" else "readonly")
 
     def _append_log(self, text: str) -> None:
         self.log.insert(END, text)
@@ -212,11 +226,15 @@ class OmiePriceApp:
             end = parse_date(self.end_var.get().strip())
             if start > end:
                 raise ValueError("La fecha inicial no puede ser posterior a la fecha final.")
+            model_choice = self.training_choice_var.get().strip()
+            if model_choice not in MODEL_CHOICES:
+                raise ValueError("Selecciona un modelo valido.")
         except Exception as exc:
-            messagebox.showerror("Fechas invalidas", str(exc))
+            messagebox.showerror("Configuracion invalida", str(exc))
             return False
         self.current_start = start
         self.current_end = end
+        self.current_model_choice = model_choice
         return True
 
     def _run_all_steps(self) -> None:
@@ -252,8 +270,18 @@ class OmiePriceApp:
 
     def _train_and_test(self):
         data = self._load_processed_data()
-        self.events.put(("log", "Entrenando candidatos y evaluando validacion temporal...\n"))
-        metrics = train_model(data, MODEL_PATH, PLOT_PATH, progress_callback=self._report_progress)
+        model_choice = self.current_model_choice
+        if model_choice == "auto":
+            self.events.put(("log", "Entrenando todos los candidatos y evaluando validacion temporal...\n"))
+        else:
+            self.events.put(("log", f"Entrenando solo el modelo seleccionado: {model_choice}\n"))
+        metrics = train_model(
+            data,
+            MODEL_PATH,
+            PLOT_PATH,
+            model_choice=model_choice,
+            progress_callback=self._report_progress,
+        )
         self.events.put(("model", f"{metrics['best_model']} | MAE {metrics['mae']:.2f}"))
         self.events.put(
             (

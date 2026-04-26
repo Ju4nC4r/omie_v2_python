@@ -9,7 +9,7 @@ El proyecto descarga precios, prepara una serie temporal supervisada, entrena va
 - Fuente: ficheros publicos `MARGINALPDBC` de OMIE.
 - Objetivo: `marginal_es`, precio marginal espanol en EUR/MWh.
 - Modelos candidatos: `RidgeCV`, `MLPRegressor` y `HistGradientBoostingRegressor`.
-- Seleccion: se guarda automaticamente el candidato con menor MAE en validacion temporal.
+- Seleccion: puedes elegir un modelo concreto o usar `auto` para guardar el candidato con menor MAE.
 - Interfaz: ventana con fases de extraccion, preparacion, entrenamiento, test e inferencia.
 - Salida principal: `models/omie_model.joblib` y `models/validation_plot.png`.
 
@@ -36,7 +36,7 @@ Tambien funciona con:
 python -m omie_price_nn.gui
 ```
 
-En la ventana puedes ejecutar las fases una a una o pulsar `Ejecutar todo`.
+En la ventana puedes elegir el modelo y ejecutar las fases una a una o pulsar `Ejecutar todo`.
 
 ## Interfaz grafica
 
@@ -44,9 +44,16 @@ La interfaz esta pensada para ver claramente el ciclo del modelo:
 
 1. `Extraccion`: descarga datos diarios de OMIE y los guarda en cache.
 2. `Preparacion`: genera variables temporales y retardos para entrenamiento.
-3. `Entrenamiento + test`: entrena candidatos, valida y muestra metricas.
+3. `Entrenamiento + test`: entrena el modelo seleccionado, valida y muestra metricas.
 4. `Inferencia`: predice el siguiente periodo despues del ultimo dato disponible.
 5. `Abrir grafica`: abre la comparacion entre valores reales, modelo y baseline.
+
+El desplegable `Modelo` permite elegir:
+
+- `auto`: entrena los tres candidatos y guarda el de menor MAE.
+- `ridge`: entrena solo `RidgeCV`.
+- `mlp`: entrena solo la red neuronal `MLPRegressor`.
+- `hist_gradient_boosting`: entrena solo `HistGradientBoostingRegressor`.
 
 Los logs de la ventana muestran el progreso, metricas, errores y artefactos generados.
 
@@ -58,10 +65,16 @@ Entrenar con un ano de datos:
 omie-price-train --start 2024-01-01 --end 2024-12-31
 ```
 
+Elegir un modelo concreto:
+
+```bash
+omie-price-train --start 2024-01-01 --end 2024-12-31 --model mlp
+```
+
 Equivalente con modulo Python:
 
 ```bash
-python -m omie_price_nn.train --start 2024-01-01 --end 2024-12-31
+python -m omie_price_nn.train --start 2024-01-01 --end 2024-12-31 --model auto
 ```
 
 Predecir el siguiente periodo:
@@ -100,9 +113,9 @@ Durante el entrenamiento:
 2. Guarda los originales en `data/raw/`.
 3. Genera `data/processed/omie_prices.csv`.
 4. Crea variables de calendario, retardos, medias moviles y cambios recientes.
-5. Entrena `RidgeCV`, `MLPRegressor` y `HistGradientBoostingRegressor`.
+5. Entrena el modelo elegido, o todos si la seleccion es `auto`.
 6. Evalua con validacion temporal, sin mezclar futuro con pasado.
-7. Guarda el mejor modelo en `models/omie_model.joblib`.
+7. Guarda el modelo seleccionado en `models/omie_model.joblib`.
 8. Guarda la grafica de validacion en `models/validation_plot.png`.
 
 ## Estructura
