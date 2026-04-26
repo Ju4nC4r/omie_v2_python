@@ -1,10 +1,10 @@
-# Capitulo 21. Anexos
+# Capítulo 21. Anexos
 
-## Prediccion del mercado electrico espanol mediante tecnicas de aprendizaje automatico
+## Predicción del mercado eléctrico español mediante técnicas de aprendizaje automático
 
-### 21.1. Manual de instalacion
+### 21.1. Manual de instalación
 
-Para instalar el proyecto en un equipo local se recomienda usar un entorno virtual Python. Desde la raiz del repositorio:
+Para instalar el proyecto en un equipo local se recomienda usar un entorno virtual Python. Desde la raíz del repositorio:
 
 ```bash
 python3 -m venv .venv
@@ -13,7 +13,7 @@ pip install -r requirements.txt
 pip install -e .
 ```
 
-Despues de instalar en modo editable, quedan disponibles los comandos:
+Después de instalar en modo editable, quedan disponibles los comandos:
 
 ```text
 omie-price-gui
@@ -21,7 +21,7 @@ omie-price-train
 omie-price-predict
 ```
 
-Si se desea comprobar la instalacion:
+Si se desea comprobar la instalación:
 
 ```bash
 omie-price-train --help
@@ -30,9 +30,9 @@ omie-price-predict --help
 
 El entorno `.venv` no debe subirse a Git. Cada usuario puede crearlo de nuevo en su equipo.
 
-### 21.2. Manual de usuario de la interfaz grafica
+### 21.2. Manual de usuario de la interfaz gráfica
 
-La interfaz grafica se ejecuta con:
+La interfaz gráfica se ejecuta con:
 
 ```bash
 omie-price-gui
@@ -43,23 +43,23 @@ La ventana permite indicar:
 - fecha inicial
 - fecha final
 - modelo de entrenamiento
-- uso opcional de ESIOS
+- usó opcional de ESIOS
 - token ESIOS
 
 Botones principales:
 
-- `1. Extraccion`: descarga datos.
-- `2. Preparacion`: prepara el dataset.
-- `3. Entrenamiento + test`: entrena y evalua.
+- `1. Extracción`: descarga datos.
+- `2. Preparación`: prepara el dataset.
+- `3. Entrenamiento + test`: entrena y evalúa.
 - `4. Inferencia`: predice el siguiente periodo.
-- `Abrir grafica`: abre `models/validation_plot.png`.
+- `Abrir gráfica`: abre `models/validation_plot.png`.
 - `Limpiar log`: limpia mensajes de la ventana.
 
-El boton `Ejecutar todo` lanza el flujo completo. Durante la ejecucion se muestran logs y barra de progreso.
+El boton `Ejecutar todo` lanza el flujo completo. Durante la ejecución se muestran logs y barra de progreso.
 
-### 21.3. Manual de ejecucion por consola
+### 21.3. Manual de ejecución por consola
 
-Entrenamiento basico con OMIE:
+Entrenamiento básico con OMIE:
 
 ```bash
 omie-price-train --start 2025-01-01 --end 2025-03-31 --model auto
@@ -95,13 +95,13 @@ El modelo se guarda por defecto en:
 models/omie_model.joblib
 ```
 
-La grafica se guarda en:
+La gráfica se guarda en:
 
 ```text
 models/validation_plot.png
 ```
 
-### 21.4. Configuracion de token ESIOS
+### 21.4. Configuración de token ESIOS
 
 Para usar variables renovables de ESIOS se necesita token. Puede indicarse mediante variable de entorno:
 
@@ -109,13 +109,13 @@ Para usar variables renovables de ESIOS se necesita token. Puede indicarse media
 export ESIOS_TOKEN="tu_token_esios"
 ```
 
-Despues se entrena con:
+Después se entrena con:
 
 ```bash
 omie-price-train --start 2025-01-01 --end 2025-03-31 --model auto --include-esios
 ```
 
-Tambien puede pasarse directamente:
+También puede pasarse directamente:
 
 ```bash
 omie-price-train --start 2025-01-01 --end 2025-03-31 --model auto --include-esios --esios-token "tu_token_esios"
@@ -123,7 +123,7 @@ omie-price-train --start 2025-01-01 --end 2025-03-31 --model auto --include-esio
 
 En la GUI, el token puede pegarse en el campo `Token ESIOS` y activar la casilla `ESIOS`.
 
-### 21.5. Configuracion de GitHub mediante SSH
+### 21.5. Configuración de GitHub mediante SSH
 
 Para subir el repositorio a GitHub mediante SSH se necesita una clave registrada.
 
@@ -133,7 +133,7 @@ Generar clave:
 ssh-keygen -t ed25519 -C "tu_email@example.com"
 ```
 
-Mostrar clave publica:
+Mostrar clave pública:
 
 ```bash
 cat ~/.ssh/id_ed25519.pub
@@ -145,7 +145,7 @@ Esa clave debe copiarse en GitHub, en:
 Settings -> SSH and GPG keys -> New SSH key
 ```
 
-Probar conexion:
+Probar conexión:
 
 ```bash
 ssh -T git@github.com
@@ -163,9 +163,9 @@ Subir cambios:
 git push -u origin main
 ```
 
-### 21.6. Fragmentos relevantes de codigo
+### 21.6. Fragmentos relevantes de código
 
-Modulos principales:
+Módulos principales:
 
 ```text
 src/omie_price_nn/data.py
@@ -185,9 +185,9 @@ Funciones relevantes:
 - `make_next_prediction_features`
 - `train_model`
 
-Estos fragmentos pueden incluirse en una version final de anexos si se desea mostrar codigo representativo sin sobrecargar el cuerpo principal de la memoria.
+Estos fragmentos pueden incluirse en una versión final de anexos si se desea mostrar código representativo sin sobrecargar el cuerpo principal de la memoria.
 
-### 21.7. Resultados completos de experimentacion
+### 21.7. Resultados completos de experimentación
 
 Experimento enero-marzo 2025:
 
@@ -199,7 +199,7 @@ R2: 0.871
 Baseline lag 24 MAE: 20.97 EUR/MWh
 ```
 
-Comparacion:
+Comparación:
 
 ```text
 ridge: MAE 10.02
@@ -217,7 +217,7 @@ R2: 0.973
 Baseline lag 24 MAE: 24.91 EUR/MWh
 ```
 
-Comparacion:
+Comparación:
 
 ```text
 ridge: MAE 4.10
@@ -228,21 +228,21 @@ hist_gradient_boosting: MAE 3.17
 Inferencia:
 
 ```text
-Prediccion para 2026-01-01 00:00:00: 94.20 EUR/MWh
+Predicción para 2026-01-01 00:00:00: 94.20 EUR/MWh
 Valor real OMIE: 112.01 EUR/MWh
 Error absoluto: 17.81 EUR/MWh
 Error relativo: 15.90 %
 ```
 
-### 21.8. Capturas de pantalla de la aplicacion
+### 21.8. Capturas de pantalla de la aplicación
 
-En una version final del TFG pueden incorporarse capturas de:
+En una versión final del TFG pueden incorporarse capturas de:
 
 - ventana principal de la GUI
 - selector de modelo
-- opcion ESIOS y token
+- opción ESIOS y token
 - log durante entrenamiento
-- resumen de metricas
-- grafica `models/validation_plot.png`
+- resumen de métricas
+- gráfica `models/validation_plot.png`
 
-Estas capturas ayudarian a documentar visualmente la aplicacion practica. Dado que las imagenes dependen de una ejecucion concreta, se recomienda generarlas al final, cuando la interfaz y los resultados esten cerrados.
+Estas capturas ayudarían a documentar visualmente la aplicación práctica. Dado que las imágenes dependen de una ejecución concreta, se recomienda generarlas al final, cuando la interfaz y los resultados estén cerrados.

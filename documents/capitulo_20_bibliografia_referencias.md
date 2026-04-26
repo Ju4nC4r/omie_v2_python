@@ -1,24 +1,24 @@
-# Capitulo 20. Bibliografia y referencias
+# Capítulo 20. Bibliografía y referencias
 
-## Prediccion del mercado electrico espanol mediante tecnicas de aprendizaje automatico
+## Predicción del mercado eléctrico español mediante técnicas de aprendizaje automático
 
-### 20.1. Documentacion de OMIE
+### 20.1. Documentación de OMIE
 
-OMIE es la fuente principal de datos de precio utilizada en el proyecto. La aplicacion descarga ficheros publicos `MARGINALPDBC`, que contienen precios marginales del mercado diario. Estos datos permiten construir la variable objetivo `marginal_es`.
+OMIE es la fuente principal de datos de precio utilizada en el proyecto. La aplicación descarga ficheros públicos `MARGINALPDBC`, que contienen precios marginales del mercado diario. Estos datos permiten construir la variable objetivo `marginal_es`.
 
 Referencias recomendadas:
 
-- OMIE. Pagina oficial del operador del mercado iberico de energia.
+- OMIE. Página oficial del operador del mercado ibérico de energía.
 - OMIE. Ficheros de resultados del mercado diario.
-- OMIE. Documentacion y formatos de ficheros publicos.
+- OMIE. Documentación y formatos de ficheros públicos.
 
-En el proyecto se usa el endpoint publico de descarga:
+En el proyecto se usa el endpoint público de descarga:
 
 ```text
 https://www.omie.es/es/file-download
 ```
 
-Y ficheros con patron:
+Y ficheros con patrón:
 
 ```text
 marginalpdbc_YYYYMMDD.1
@@ -26,29 +26,29 @@ marginalpdbc_YYYYMMDD.1
 
 Estas referencias deben citarse para justificar el origen oficial de la serie de precios.
 
-### 20.2. Documentacion de ESIOS/REE
+### 20.2. Documentación de ESIOS/REE
 
-ESIOS, gestionado por Red Electrica, se utiliza como fuente opcional de variables externas. En concreto, se emplean indicadores de prevision eolica, solar fotovoltaica y solar termica.
+ESIOS, gestionado por Red Eléctrica, se utiliza como fuente opcional de variables externas. En concreto, se emplean indicadores de previsión eólica, solar fotovoltaica y solar térmica.
 
 Indicadores usados:
 
 ```text
-541 -> prevision eolica
-542 -> prevision solar fotovoltaica
-543 -> prevision solar termica
+541 -> previsión eólica
+542 -> previsión solar fotovoltaica
+543 -> previsión solar térmica
 ```
 
 Referencias recomendadas:
 
-- Red Electrica. Sistema de Informacion del Operador del Sistema, ESIOS.
-- Documentacion API ESIOS.
+- Red Eléctrica. Sistema de Información del Operador del Sistema, ESIOS.
+- Documentación API ESIOS.
 - Listado oficial de indicadores ESIOS.
 
 Estas referencias son necesarias para explicar la procedencia de las variables renovables y el motivo por el que se requiere un token de acceso.
 
-### 20.3. Documentacion de scikit-learn
+### 20.3. Documentación de scikit-learn
 
-scikit-learn es la biblioteca principal utilizada para los modelos de aprendizaje automatico. El proyecto utiliza `RidgeCV`, `MLPRegressor`, `HistGradientBoostingRegressor`, pipelines, escaladores y metricas.
+scikit-learn es la biblioteca principal utilizada para los modelos de aprendizaje automático. El proyecto utiliza `RidgeCV`, `MLPRegressor`, `HistGradientBoostingRegressor`, pipelines, escaladores y métricas.
 
 Componentes usados:
 
@@ -66,18 +66,18 @@ Referencias recomendadas:
 
 - scikit-learn. User Guide.
 - scikit-learn. API Reference.
-- Documentacion de modelos lineales.
-- Documentacion de redes neuronales supervisadas.
-- Documentacion de ensemble methods y gradient boosting.
-- Documentacion de metricas de regresion.
+- Documentación de modelos lineales.
+- Documentación de redes neuronales supervisadas.
+- Documentación de ensemble methods y gradient boosting.
+- Documentación de métricas de regresión.
 
-Estas referencias permiten justificar tecnicamente los modelos y metricas empleados.
+Estas referencias permiten justificar técnicamente los modelos y métricas empleados.
 
-### 20.4. Bibliografia sobre prediccion de precios electricos
+### 20.4. Bibliografía sobre predicción de precios eléctricos
 
-La prediccion de precios electricos es un campo amplio que combina economia energetica, series temporales y aprendizaje automatico. La literatura suele estudiar modelos estadisticos, redes neuronales, metodos de ensemble, modelos hibridos y variables exogenas.
+La predicción de precios eléctricos es un campo amplio que combina economía energética, series temporales y aprendizaje automático. La literatura suele estudiar modelos estadísticos, redes neuronales, métodos de ensemble, modelos híbridos y variables exógenas.
 
-Temas bibliograficos recomendados:
+Temás bibliograficos recomendados:
 
 - Electricity price forecasting.
 - Short-term electricity price forecasting.
@@ -85,51 +85,51 @@ Temas bibliograficos recomendados:
 - Machine learning for electricity markets.
 - Forecasting in renewable-intensive power systems.
 
-En la memoria final conviene incluir articulos academicos que revisen el estado del arte y comparen modelos. Tambien es util citar trabajos sobre mercados con alta penetracion renovable, ya que el mercado electrico espanol esta cada vez mas influido por eolica y solar.
+En la memoria final conviene incluir articulos académicos que revisen el estado del arte y comparen modelos. También es útil citar trabajos sobre mercados con alta penetración renovable, ya que el mercado eléctrico español está cada vez más influido por eólica y solar.
 
-### 20.5. Bibliografia sobre series temporales
+### 20.5. Bibliografía sobre series temporales
 
-El proyecto se basa en tratar el precio electrico como una serie temporal. Por ello, debe apoyarse en bibliografia sobre retardos, autocorrelacion, estacionalidad, validacion temporal y backtesting.
+El proyecto se basa en tratar el precio eléctrico como una serie temporal. Por ello, debe apoyarse en bibliografía sobre retardos, autocorrelación, estacionalidad, validación temporal y backtesting.
 
 Conceptos relevantes:
 
 - series temporales
 - estacionariedad
-- autocorrelacion
+- autocorrelación
 - estacionalidad diaria, semanal y anual
-- validacion temporal
+- validación temporal
 - ventanas deslizantes
 - backtesting
 
 Referencias recomendadas:
 
 - libros introductorios de series temporales
-- documentacion sobre modelos ARIMA y SARIMA
+- documentación sobre modelos ARIMA y SARIMA
 - textos sobre forecasting aplicado
-- recursos sobre evaluacion temporal sin fuga de informacion
+- recursos sobre evaluación temporal sin fuga de información
 
-Estas referencias permiten fundamentar decisiones como usar retardos, medias moviles y separacion temporal entre entrenamiento y validacion.
+Estas referencias permiten fundamentar decisiones como usar retardos, medias móviles y separación temporal entre entrenamiento y validación.
 
-### 20.6. Bibliografia sobre aprendizaje automatico
+### 20.6. Bibliografía sobre aprendizaje automático
 
-El proyecto utiliza aprendizaje supervisado de regresion. La bibliografia debe cubrir conceptos generales como entrenamiento, validacion, sobreajuste, regularizacion, metricas, modelos lineales, redes neuronales y modelos de arboles.
+El proyecto utiliza aprendizaje supervisado de regresión. La bibliografía debe cubrir conceptos generales como entrenamiento, validación, sobreajuste, regularización, métricas, modelos lineales, redes neuronales y modelos de árboles.
 
 Conceptos relevantes:
 
 - aprendizaje supervisado
-- regresion
-- regularizacion
+- regresión
+- regularización
 - sobreajuste
 - escalado de variables
 - redes neuronales multicapa
 - gradient boosting
-- metricas MAE, RMSE y R2
+- métricas MAE, RMSE y R2
 
 Referencias recomendadas:
 
 - libros generales de machine learning
-- documentacion de scikit-learn
-- recursos academicos sobre modelos de regresion
-- textos sobre interpretabilidad y evaluacion de modelos
+- documentación de scikit-learn
+- recursos académicos sobre modelos de regresión
+- textos sobre interpretabilidad y evaluación de modelos
 
-La bibliografia final deberia combinar referencias oficiales de herramientas, fuentes de datos y articulos academicos sobre prediccion de precios electricos. Esta combinacion permite justificar tanto el origen de los datos como las decisiones metodologicas y tecnicas.
+La bibliografía final debería combinar referencias oficiales de herramientas, fuentes de datos y articulos académicos sobre predicción de precios eléctricos. Esta combinación permite justificar tanto el origen de los datos como las decisiones metodológicas y técnicas.
