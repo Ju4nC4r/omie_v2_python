@@ -22,6 +22,9 @@
 - [Capitulo 16. Discusion](capitulo_16_discusion.md)
 - [Capitulo 17. Conclusiones](capitulo_17_conclusiones.md)
 - [Capitulo 18. Lineas futuras](capitulo_18_lineas_futuras.md)
+- [Capitulo 19. Planificacion del proyecto](capitulo_19_planificacion_proyecto.md)
+- [Capitulo 20. Bibliografia y referencias](capitulo_20_bibliografia_referencias.md)
+- [Capitulo 21. Anexos](capitulo_21_anexos.md)
 
 > Nota: a medida que se desarrollen nuevos capitulos, se anadiran enlaces a sus ficheros Markdown correspondientes.
 
@@ -221,7 +224,7 @@
 18.7. Optimizacion de hiperparametros  
 18.8. Despliegue como aplicacion web  
 
-### 19. Planificacion del proyecto _(pendiente de desarrollar)_
+### [19. Planificacion del proyecto](capitulo_19_planificacion_proyecto.md)
 
 19.1. Fases del desarrollo  
 19.2. Cronograma estimado  
@@ -229,7 +232,7 @@
 19.4. Riesgos identificados  
 19.5. Gestion del repositorio  
 
-### 20. Bibliografia y referencias _(pendiente de desarrollar)_
+### [20. Bibliografia y referencias](capitulo_20_bibliografia_referencias.md)
 
 20.1. Documentacion de OMIE  
 20.2. Documentacion de ESIOS/REE  
@@ -238,7 +241,7 @@
 20.5. Bibliografia sobre series temporales  
 20.6. Bibliografia sobre aprendizaje automatico  
 
-### 21. Anexos _(pendiente de desarrollar)_
+### [21. Anexos](capitulo_21_anexos.md)
 
 21.1. Manual de instalacion  
 21.2. Manual de usuario de la interfaz grafica  
