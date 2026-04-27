@@ -31,6 +31,7 @@ Incluye:
 - [Estructura del proyecto](#-estructura-del-proyecto)
 - [GitHub con SSH](#-github-con-ssh)
 - [Problemas frecuentes](#-problemas-frecuentes)
+- [Resumen del hilo de desarrollo](#-resumen-del-hilo-de-desarrollo)
 - [Ideas de mejora](#-ideas-de-mejora)
 - [Referencias](#-referencias)
 
@@ -560,6 +561,14 @@ rm -f models/omie_model.joblib models/validation_plot.png
 ```
 
 Conservar `data/raw/` evita descargar otra vez los ficheros ya cacheados.
+
+## 🧵 Resumen del hilo de desarrollo
+
+El proyecto incluye un resumen estructurado de la evolución técnica y documental del desarrollo:
+
+- [Resumen del hilo de desarrollo](documents/resumen_hilo_desarrollo.md)
+
+Este documento recoge el objetivo inicial, la arquitectura, los módulos implementados, los modelos, los resultados experimentales, la documentación generada, los commits principales y los próximos pasos sugeridos.
 
 ## 🧭 Ideas de mejora
 
