@@ -500,7 +500,7 @@ git@github.com: Permission denied (publickey).
 
 Se explico como configurar una SSH key en macOS para GitHub.
 
-## 16. Documentación TFG creada
+## 16. Documentación creada
 
 Se creo el directorio:
 
@@ -508,7 +508,7 @@ Se creo el directorio:
 documents/
 ```
 
-Dentro se generó el índice del TFG y capítulos desarrollados en ficheros Markdown separados.
+Dentro se generó el índice del Documento y capítulos desarrollados en ficheros Markdown separados.
 
 El índice actual es:
 
@@ -592,7 +592,7 @@ Recoge la ficha técnica del proyecto: nombre, Python, `.venv`, paquete, reposit
 
 Documenta los resultados de enero-marzo 2025, casi todo 2025, comparación de modelos, modo `auto`, baseline e inferencia frente a OMIE.
 
-## 18. Capítulos pendientes del TFG
+## 18. Capítulos pendientes del Documento
 
 En el índice siguen pendientes:
 
