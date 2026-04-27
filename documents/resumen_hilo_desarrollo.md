@@ -1,8 +1,8 @@
-# Resumen estructurado actualizado del hilo de desarrollo
+# 🧵 Resumen estructurado actualizado del hilo de desarrollo
 
 Última actualización: 2026-04-27.
 
-## 1. Objetivo inicial del proyecto
+## 🎯 1. Objetivo inicial del proyecto
 
 El proyecto comenzó como una aplicación sencilla para entrenar una red neuronal capaz de inferir el precio del mercado eléctrico español a partir de datos públicos de OMIE.
 
@@ -20,7 +20,7 @@ La idea inicial era intencionadamente pequeña: aprender de calendario, ciclos h
 
 El proyecto se ha orientado tanto a la parte práctica de machine learning como a la redaccion académica del Proyecto.
 
-## 2. Estructura general del proyecto
+## 🗂️ 2. Estructura general del proyecto
 
 Se creo un paquete Python llamado:
 
@@ -54,7 +54,7 @@ La estructura principal del proyecto quedó organizada así:
 
 El directorio `documents/` se creo para alojar la documentación del Proyecto y los resúmenes del desarrollo.
 
-## 3. Entorno Python
+## 🐍 3. Entorno Python
 
 Se preparo un entorno virtual local:
 
@@ -82,7 +82,7 @@ Dependencias principales:
 
 El proyecto exige Python `>=3.10`.
 
-## 4. Comandos disponibles
+## ⌨️ 4. Comandos disponibles
 
 En `pyproject.toml` se definieron tres comandos principales:
 
@@ -111,7 +111,7 @@ export ESIOS_TOKEN="tu_token_esios"
 omie-price-train --start 2025-01-01 --end 2025-03-31 --model auto --include-esios
 ```
 
-## 5. Descarga y parseo de datos OMIE
+## 📥 5. Descarga y parseo de datos OMIE
 
 Se implementó el módulo:
 
@@ -147,7 +147,7 @@ El parser se preparo para:
 
 La deteccion se realiza por el número máximo de periodos del día.
 
-## 6. Integración opcional con ESIOS
+## 🌬️ 6. Integración opcional con ESIOS
 
 Se implementó el módulo:
 
@@ -183,7 +183,7 @@ Caracteristicas de la integración:
 
 Si se activa ESIOS sin token, el programa falla de forma temprana con un mensaje claro.
 
-## 7. Ingeniería de variables
+## 🧮 7. Ingeniería de variables
 
 Se implementó el módulo:
 
@@ -226,7 +226,7 @@ La matriz sin ESIOS tiene 45 variables. Al activar ESIOS se añaden 6 variables 
 
 Para evitar fuga de información, las medias y estadísticos móviles se calculan usando el precio desplazado un periodo.
 
-## 8. Modelos de entrenamiento
+## 🤖 8. Modelos de entrenamiento
 
 Se implementó el entrenamiento en:
 
@@ -243,7 +243,7 @@ mlp
 hist_gradient_boosting
 ```
 
-### 8.1. `ridge`
+### 📏 8.1. `ridge`
 
 Usa:
 
@@ -253,7 +253,7 @@ RidgeCV
 
 Es una regresión lineal regularizada. Es rápida, estable y adecuada como modelo base.
 
-### 8.2. `mlp`
+### 🧠 8.2. `mlp`
 
 Usa:
 
@@ -263,7 +263,7 @@ MLPRegressor
 
 Es una red neuronal feed-forward sencilla. Representa la idea inicial del proyecto, pero no siempre es el modelo con mejor resultado.
 
-### 8.3. `hist_gradient_boosting`
+### 🌳 8.3. `hist_gradient_boosting`
 
 Usa:
 
@@ -273,7 +273,7 @@ HistGradientBoostingRegressor
 
 Es un modelo basado en árboles con boosting. En datos tabulares y con más histórico obtuvo muy buen rendimiento.
 
-### 8.4. `auto`
+### 🏁 8.4. `auto`
 
 No es un modelo, sino un modo de selección. Entrena:
 
@@ -285,7 +285,7 @@ hist_gradient_boosting
 
 Después selecciona el que obtiene menor `MAE` en validación temporal.
 
-## 9. Interfaz gráfica
+## 🖥️ 9. Interfaz gráfica
 
 Se implementó la GUI en:
 
@@ -319,7 +319,7 @@ Elementos principales:
 
 Se corrigió el problema de que el entrenamiento pareciera quedarse bloqueado mostrando progreso y mensajes por candidato.
 
-## 10. Inferencia
+## 🔮 10. Inferencia
 
 Se implementó la inferencia en:
 
@@ -343,7 +343,7 @@ El sistema:
 
 También se silenció un aviso de CPU de joblib configurando `LOKY_MAX_CPU_COUNT=1` en la fase de predicción.
 
-## 11. Métricas usadas
+## 📊 11. Métricas usadas
 
 Métricas explicadas y utilizadas:
 
@@ -363,9 +363,9 @@ Significado:
 
 El baseline sirve para comprobar si el modelo aporta valor frente a una regla sencilla.
 
-## 12. Resultados obtenidos
+## 🧪 12. Resultados obtenidos
 
-### 12.1. Entrenamiento enero-marzo 2025
+### 📆 12.1. Entrenamiento enero-marzo 2025
 
 Comando:
 
@@ -391,7 +391,7 @@ mlp: MAE 13.70
 hist_gradient_boosting: MAE 10.23
 ```
 
-### 12.2. Entrenamiento con casi todo 2025
+### 📈 12.2. Entrenamiento con casi todo 2025
 
 Comando:
 
@@ -424,7 +424,7 @@ mlp: MAE 3.98
 hist_gradient_boosting: MAE 3.17
 ```
 
-## 13. Inferencia comparada con valor real OMIE
+## ⚖️ 13. Inferencia comparada con valor real OMIE
 
 Tras entrenar con datos de 2025, se generó una predicción:
 
@@ -458,7 +458,7 @@ El modelo infraestimo el precio del primer periodo de 2026. Se identificaron pos
 - falta de gas y CO2
 - limitaciones del uso de retardos por número de periodos
 
-## 14. README
+## 📘 14. README
 
 El README se amplio varias veces. Actualmente documenta:
 
@@ -478,7 +478,7 @@ El README se amplio varias veces. Actualmente documenta:
 
 También se pidio que el README usara emojis y fuera más completo.
 
-## 15. Repositorio Git y GitHub
+## 🔀 15. Repositorio Git y GitHub
 
 Se inicializó y usó Git durante el desarrollo. Se realizaron commits para los principales hitos.
 
@@ -502,7 +502,7 @@ git@github.com: Permission denied (publickey).
 
 Se explico como configurar una SSH key en macOS para GitHub.
 
-## 16. Documentación del Proyecto creada y actualizada
+## 📝 16. Documentación del Proyecto creada y actualizada
 
 Se creo el directorio:
 
@@ -540,7 +540,7 @@ Además, en el directorio `documents/` existe una infografía del proyecto:
 Infografia-ResumenProyecto-OMIE-v2-Python.png
 ```
 
-## 17. Capítulos del Proyecto desarrollados
+## 📚 17. Capítulos del Proyecto desarrollados
 
 Actualmente están desarrollados y enlazados en el índice:
 
@@ -568,91 +568,91 @@ capitulo_20_bibliografia_referencias.md
 capitulo_21_anexos.md
 ```
 
-### 17.1. Capítulo 1. Resumen
+### 📄 17.1. Capítulo 1. Resumen
 
 Presenta el contexto, objetivo, metodología, resultados esperados, aplicación práctica, contribuciones, alcance y síntesis.
 
-### 17.2. Capítulo 2. Introducción
+### 🚪 17.2. Capítulo 2. Introducción
 
 Desarrolla la motivacion, importancia de predecir el precio eléctrico, problema, alcance y estructura del documento.
 
-### 17.3. Capítulo 3. Objetivos
+### 🎯 17.3. Capítulo 3. Objetivos
 
 Define el objetivo general, objetivos específicos, requisitos funcionales, requisitos no funcionales y limitaciones iniciales.
 
-### 17.4. Capítulo 4. Marco teórico
+### 🧭 17.4. Capítulo 4. Marco teórico
 
 Explica el funcionamiento del mercado eléctrico español, OMIE, ESIOS, factores de precio, renovables, series temporales y aprendizaje supervisado.
 
-### 17.5. Capítulo 5. Estado del arte
+### 🔎 17.5. Capítulo 5. Estado del arte
 
 Revisa modelos estadísticos clásicos, machine learning aplicado a energía, redes neuronales, modelos de boosting, comparación de enfoques y retos de la literatura.
 
-### 17.6. Capítulo 6. Fuentes de datos
+### 🗄️ 17.6. Capítulo 6. Fuentes de datos
 
 Documenta OMIE, ficheros `MARGINALPDBC`, ESIOS, previsión eólica, solar fotovoltaica, solar térmica, frecuencia temporal, calidad de datos y cache local.
 
-### 17.7. Capítulo 7. Preparación de datos
+### 🧹 17.7. Capítulo 7. Preparación de datos
 
 Explica descarga OMIE, ESIOS opcional, limpieza, normalización, unión por `timestamp`, gestión de ausentes, dataset supervisado y validación temporal.
 
-### 17.8. Capítulo 8. Ingeniería de variables
+### 🧮 17.8. Capítulo 8. Ingeniería de variables
 
 Detalla variables de calendario, codificación cíclica, retardos, medias móviles, desviaciones, mínimos, máximos, diferencias, ratios y variables renovables.
 
-### 17.9. Capítulo 9. Modelos de predicción
+### 🤖 17.9. Capítulo 9. Modelos de predicción
 
 Explica el baseline `lag 24`, `RidgeCV`, `MLPRegressor`, `HistGradientBoostingRegressor`, el modo automático de selección, hiperparámetros, ventajas e inconvenientes.
 
-### 17.10. Capítulo 10. Metodología de evaluación
+### 📏 17.10. Capítulo 10. Metodología de evaluación
 
 Describe la validación temporal, la prevención de fuga de información, las métricas `MAE`, `RMSE` y `R2`, la comparación contra baseline, el análisis de errores y la evaluación por rangos temporales.
 
-### 17.11. Capítulo 11. Diseño de la aplicación práctica
+### 🧩 17.11. Capítulo 11. Diseño de la aplicación práctica
 
 Documenta la arquitectura general del software, módulos principales, flujo de ejecución, interfaz gráfica, interfaz por consola, artefactos generados, entorno Python y control de versiones.
 
-### 17.12. Capítulo 12. Implementación del proyecto
+### 🛠️ 17.12. Capítulo 12. Implementación del proyecto
 
 Describe la estructura de directorios, módulos de OMIE, ESIOS, generación de variables, entrenamiento, inferencia, interfaz Tkinter, serialización del modelo y generación de gráficas.
 
-### 17.13. Capítulo 13. Aplicación práctica desarrollada
+### 🖥️ 17.13. Capítulo 13. Aplicación práctica desarrollada
 
 Describe la aplicación real, GUI, comandos, flujo de trabajo, selección de modelos, modo `auto`, OMIE, ESIOS, inferencia y comparación con valor real.
 
-### 17.14. Capítulo 14. Información concreta del proyecto implementado
+### 🧾 17.14. Capítulo 14. Información concreta del proyecto implementado
 
 Recoge la ficha técnica del proyecto: nombre, Python, `.venv`, paquete, repositorio, comandos, modelo guardado y gráfica generada.
 
-### 17.15. Capítulo 15. Resultados experimentales
+### 🧪 17.15. Capítulo 15. Resultados experimentales
 
 Documenta los resultados de enero-marzo 2025, casi todo 2025, comparación de modelos, modo `auto`, baseline e inferencia frente a OMIE.
 
-### 17.16. Capítulo 16. Discusión
+### 💬 17.16. Capítulo 16. Discusión
 
 Interpreta los resultados, la influencia de la cantidad de histórico, el impacto esperado de variables renovables, limitaciones, riesgos de sobreajuste y robustez ante datos ausentes.
 
-### 17.17. Capítulo 17. Conclusiones
+### ✅ 17.17. Capítulo 17. Conclusiones
 
 Resume el cumplimiento de objetivos, principales aportaciones, conclusiones técnicas, conclusiones sobre el mercado eléctrico y valor de la aplicación práctica.
 
-### 17.18. Capítulo 18. Líneas futuras
+### 🚀 17.18. Capítulo 18. Líneas futuras
 
 Propone mejoras como demanda prevista, meteorología, festivos, predicción del día completo, backtesting mensual, modelos específicos de series temporales, optimización de hiperparámetros y despliegue web.
 
-### 17.19. Capítulo 19. Planificación del proyecto
+### 🗓️ 17.19. Capítulo 19. Planificación del proyecto
 
 Recoge fases del desarrollo, cronograma estimado, herramientas utilizadas, riesgos identificados y gestión del repositorio.
 
-### 17.20. Capítulo 20. Bibliografía y referencias
+### 🔖 17.20. Capítulo 20. Bibliografía y referencias
 
 Agrupa referencias a OMIE, ESIOS/REE, scikit-learn, pandas, NumPy, matplotlib, joblib, Tkinter, Git, GitHub y literatura relacionada.
 
-### 17.21. Capítulo 21. Anexos
+### 📎 17.21. Capítulo 21. Anexos
 
 Incluye comandos, estructura de directorios, ejemplos de ejecución, artefactos generados, fragmentos de código, configuración de entorno, Git y posibles capturas.
 
-## 18. Estado de capítulos del Proyecto
+## ✅ 18. Estado de capítulos del Proyecto
 
 Ya no quedan capítulos pendientes en el índice principal. Los capítulos 1 a 21 están desarrollados y enlazados.
 
@@ -665,7 +665,7 @@ El estado documental actual es de revisión y cierre:
 - revisar que los anexos incluyan comandos y evidencias útiles
 - preparar una versión final exportable si se necesita entregar en PDF o DOCX
 
-## 19. Commits principales
+## 🧱 19. Commits principales
 
 Commits relevantes del hilo:
 
@@ -705,9 +705,9 @@ ddc8d42 Se corrige el título
 40ca27f Revisión de ortografia
 ```
 
-## 20. Problemas encontrados
+## ⚠️ 20. Problemas encontrados
 
-### 20.1. Autenticación GitHub
+### 🔐 20.1. Autenticación GitHub
 
 Los intentos de `git push` fallaron por falta de clave SSH autorizada en GitHub.
 
@@ -719,7 +719,7 @@ Permission denied (publickey).
 
 Se explico como generar/configurar una SSH key en macOS.
 
-### 20.2. Red y descargas
+### 🌐 20.2. Red y descargas
 
 Algunas descargas pueden fallar por red, DNS o disponibilidad del servidor.
 
@@ -730,21 +730,21 @@ En 2025, OMIE no devolvio ficheros para:
 2025-11-27
 ```
 
-### 20.3. Entrenamiento aparentemente bloqueado
+### ⏳ 20.3. Entrenamiento aparentemente bloqueado
 
 El entrenamiento, especialmente con `mlp` o `auto`, podía parecer parado. Se mejoró la GUI para mostrar progreso y logs.
 
-### 20.4. Resolución horaria y cuarto-horaria
+### 🕒 20.4. Resolución horaria y cuarto-horaria
 
 Se detecto que algunos datos pueden contener 24 periodos y otros 96 periodos.
 
 Esto afecta a la interpretación de retardos como `lag 24`, que en horario equivale a un día, pero en cuarto-horario equivale a seis horas.
 
-### 20.5. Inferencia con error puntual
+### 📉 20.5. Inferencia con error puntual
 
 La predicción para `2026-01-01 00:00` infraestimo el valor real. Se identifico la necesidad de incorporar festivos, demanda, meteorología y otras variables externas.
 
-## 21. Próximos pasos sugeridos
+## 🧭 21. Próximos pasos sugeridos
 
 Pasos técnicos:
 
@@ -766,7 +766,7 @@ Pasos documentales:
 - preparar anexos con comandos, estructura del proyecto y capturas de la GUI
 - revisar el resumen del hilo cuando se realicen nuevos cambios importantes
 
-## 22. Estado actual resumido
+## 📌 22. Estado actual resumido
 
 El proyecto ya cuenta con:
 
