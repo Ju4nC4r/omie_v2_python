@@ -18,7 +18,7 @@ La quinta fase fue la interfaz gráfica. Se desarrolló una GUI con Tkinter para
 
 La sexta fase fue la integración opcional de ESIOS. Se añadió la posibilidad de incorporar previsiones de generación eólica, solar fotovoltaica y solar térmica. Esta ampliación acercó el modelo a variables físicas relevantes del sistema eléctrico.
 
-La séptima fase fue la documentación. Se amplio el README, se creo el directorio `documents/`, se generó el índice del TFG y se desarrollaron los capítulos de la memoria en ficheros Markdown separados.
+La séptima fase fue la documentación. Se amplio el README, se creo el directorio `documents/`, se generó el índice del Proyecto y se desarrollaron los capítulos de la memoria en ficheros Markdown separados.
 
 ### 19.2. Cronograma estimado
 
@@ -37,7 +37,7 @@ Una planificación razonable sería:
 | Interfaz gráfica | 1-2 semanas | GUI con fases del flujo |
 | Integración ESIOS | 1-2 semanas | Variables renovables opcionales |
 | Documentación técnica | 2 semanas | README y resumen del desarrollo |
-| Memoria TFG | 4-6 semanas | Capítulos del documento |
+| Memoria Proyecto | 4-6 semanas | Capítulos del documento |
 | Revisión final | 1-2 semanas | Correcciones, figuras y anexos |
 
 Este cronograma muestra que el proyecto combina tareas de software, datos, experimentación y redaccion académica. No se trata solo de entrenar un modelo, sino de construir un sistema reproducible y explicarlo adecuadamente.
@@ -52,7 +52,7 @@ Tkinter se utilizó para la interfaz gráfica. Aunque existen frameworks más mo
 
 Git se usó para controlar versiones. El repositorio remoto de GitHub se configuró como destino para públicar el proyecto, aunque la subida dependía de resolver la autenticación SSH. El uso de commits por hitos permitió mantener trazabilidad del desarrollo.
 
-Markdown se utilizó para la documentación. Tanto el README como los capítulos del TFG se redactaron en este formato, lo que facilita versionado, lectura y futura conversión a otros formatos.
+Markdown se utilizó para la documentación. Tanto el README como los capítulos del Proyecto se redactaron en este formato, lo que facilita versionado, lectura y futura conversión a otros formatos.
 
 ### 19.4. Riesgos identificados
 
@@ -72,7 +72,7 @@ El sexto riesgo fue el alcance. El problema de predecir precios eléctricos pued
 
 ### 19.5. Gestión del repositorio
 
-El repositorio se gestionó con Git. Cada avance importante se guardó en un commit. Esto incluye la creación inicial de la aplicación, la interfaz gráfica, la selección de modelos, la integración ESIOS, la ampliación del README y el desarrollo de capítulos del TFG.
+El repositorio se gestionó con Git. Cada avance importante se guardó en un commit. Esto incluye la creación inicial de la aplicación, la interfaz gráfica, la selección de modelos, la integración ESIOS, la ampliación del README y el desarrollo de capítulos del Proyecto.
 
 La politica seguida fue no versiónar artefactos generados como datos, modelos, caches o entornos virtuales. Estos elementos se excluyeron mediante `.gitignore`. El repositorio contiene código, configuración y documentación; los datos y modelos se regeneran ejecutando la aplicación.
 
@@ -90,4 +90,4 @@ git@github.com:Ju4nC4r/omie_v2_python.git
 
 Para completar la públicacion remota es necesario que la clave SSH del equipo este registrada en GitHub. Una vez resuelto, los commits locales pueden subirse con `git push`.
 
-La gestión del repositorio aporta trazabilidad al TFG. Permite demostrar que el proyecto se desarrolló de forma incremental y que cada funcionalidad queda registrada históricamente.
+La gestión del repositorio aporta trazabilidad al Proyecto. Permite demostrar que el proyecto se desarrolló de forma incremental y que cada funcionalidad queda registrada históricamente.

@@ -40,7 +40,7 @@ El backtesting mensual permitiría evaluar el modelo de forma más robusta. En l
 
 Esta metodología mostraría si el modelo mantiene su rendimiento a lo largo del tiempo. También permitiría detectar meses especialmente difíciles y comparar estabilidad entre Ridge, MLP e HistGradientBoosting.
 
-El resultado podría resumirse en una tabla de MAE, RMSE y R2 por mes. Esta información sería muy valiosa para la discusión del TFG y para futuras mejoras.
+El resultado podría resumirse en una tabla de MAE, RMSE y R2 por mes. Esta información sería muy valiosa para la discusión del Proyecto y para futuras mejoras.
 
 ### 18.6. Modelos específicos de series temporales
 

@@ -75,7 +75,7 @@ omie-price-predict
 
 `omie-price-train` permite entrenar indicando fechas, modelo y uso de ESIOS. `omie-price-predict` realiza inferencia con el modelo guardado.
 
-La consola es útil para reproducir experimentos, automatizar ejecuciones y documentar comandos exactos en la memoria del TFG. La GUI, en cambio, es más adecuada para demostraciones visuales.
+La consola es útil para reproducir experimentos, automatizar ejecuciones y documentar comandos exactos en la memoria del Proyecto. La GUI, en cambio, es más adecuada para demostraciones visuales.
 
 Disponer de consola y GUI aporta dos beneficios complementarios. La consola favorece reproducibilidad, porque los comandos pueden copiarse en la memoria. La GUI favorece accesibilidad, porque permite usar el sistema mediante botones y campos de texto.
 
@@ -108,10 +108,10 @@ La configuración del entorno forma parte del diseño porque condiciona la repro
 
 ### 11.8. Control de versiones con Git
 
-El proyecto se gestiona con Git. Cada avance relevante se guarda en un commit: interfaz gráfica, selección de modelos, ESIOS, README y capítulos del TFG.
+El proyecto se gestiona con Git. Cada avance relevante se guarda en un commit: interfaz gráfica, selección de modelos, ESIOS, README y capítulos del Proyecto.
 
 El control de versiones aporta trazabilidad. Permite saber cuando se introdujo cada funcionalidad y facilita recuperar cambios. El repositorio remoto configurado apunta a GitHub, aunque la subida requiere tener correctamente configurada la clave SSH.
 
-En un TFG técnico, Git no es solo una herramienta auxiliar: demuestra una metodología de trabajo ordenada.
+En un Proyecto técnico, Git no es solo una herramienta auxiliar: demuestra una metodología de trabajo ordenada.
 
-El uso de commits por hitos permite reconstruir la evolución del proyecto: creación del paquete, GUI, modelos, ESIOS, README y documentación del TFG. En conclusión, el diseño de la aplicación busca un equilibrio entre sencillez, modularidad y utilidad práctica.
+El uso de commits por hitos permite reconstruir la evolución del proyecto: creación del paquete, GUI, modelos, ESIOS, README y documentación del Proyecto. En conclusión, el diseño de la aplicación busca un equilibrio entre sencillez, modularidad y utilidad práctica.

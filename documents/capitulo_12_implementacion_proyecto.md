@@ -13,11 +13,11 @@ data/
 models/
 ```
 
-El código fuente vive en `src/omie_price_nn/`. La documentación del TFG se almacena en `documents/`. Los datos descargados y procesados se guardan en `data/`. Los modelos y gráficas se guardan en `models/`.
+El código fuente vive en `src/omie_price_nn/`. La documentación del Proyecto se almacena en `documents/`. Los datos descargados y procesados se guardan en `data/`. Los modelos y gráficas se guardan en `models/`.
 
 Esta separación evita mezclar código, datos, documentación y artefactos.
 
-El directorio `src/` contiene el paquete instalable. El directorio `documents/` contiene la memoria del TFG y los resúmenes del desarrollo. Los directorios `data/` y `models/` se consideran artefactos locales generados durante la ejecución, por lo que están excluidos del repositorio.
+El directorio `src/` contiene el paquete instalable. El directorio `documents/` contiene la memoria del Proyecto y los resúmenes del desarrollo. Los directorios `data/` y `models/` se consideran artefactos locales generados durante la ejecución, por lo que están excluidos del repositorio.
 
 ### 12.2. Módulo de descarga y parseo de OMIE
 
@@ -117,6 +117,6 @@ Durante el entrenamiento se genera `models/validation_plot.png`. La gráfica com
 
 Se muestran los primeros 240 periodos del tramo de validación. Esto permite inspeccionar visualmente si el modelo sigue la forma general de la serie, si suaviza picos o si se separa del precio real.
 
-La gráfica complementa las métricas numéricas y facilita la explicación del resultado en la memoria del TFG.
+La gráfica complementa las métricas numéricas y facilita la explicación del resultado en la memoria del Proyecto.
 
 La gráfica se genera con matplotlib en modo no interactivo, por lo que puede crearse desde consola sin abrir ventanas adicionales. En conjunto, la implementación convierte la metodología descrita en capítulos anteriores en una aplicación ejecutable, reproducible y extensible.

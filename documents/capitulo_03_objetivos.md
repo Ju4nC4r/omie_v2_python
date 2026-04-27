@@ -114,7 +114,7 @@ Finalmente, el trabajo debe incluir documentación suficiente para instalar, eje
 
 - README del repositorio
 - documentación académica en `documents/`
-- índice del TFG
+- índice del Proyecto
 - capítulos desarrollados
 - resumen del hilo de desarrollo
 - explicación de modelos, datos y métricas

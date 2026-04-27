@@ -16,7 +16,7 @@ El proyecto no pretende ser una herramienta comercial de predicción del mercado
 
 Una característica importante es que el programa conserva artefactos generados durante la ejecución. Los datos procesados se guardan en `data/processed/`, los modelos entrenados en `models/` y la gráfica de validación como `models/validation_plot.png`. Esta organización permite inspeccionar resultados, repetir inferencias y mantener una trazabilidad razonable del flujo de trabajo.
 
-La aplicación desarrollada conecta directamente con el problema planteado en el TFG: predecir el precio del mercado eléctrico español a partir de datos históricos y variables explicativas. La contribución práctica consiste en transformar ese problema en un software ejecutable, documentado y versionado con Git.
+La aplicación desarrollada conecta directamente con el problema planteado en el Proyecto: predecir el precio del mercado eléctrico español a partir de datos históricos y variables explicativas. La contribución práctica consiste en transformar ese problema en un software ejecutable, documentado y versionado con Git.
 
 ### 13.2. Objetivo de la aplicación
 
@@ -58,7 +58,7 @@ La tercera fase es el entrenamiento y test. En ella se entrena el modelo elegido
 
 La cuarta fase es la inferencia. Una vez existe un modelo guardado, la aplicación puede estimar el precio del siguiente periodo disponible en el dataset. Esta predicción se realiza usando las mismas variables esperadas por el modelo entrenado. Si el modelo fue entrenado con ESIOS, el sistema intenta conservar y utilizar las columnas externas correspondientes.
 
-El valor de la GUI no es solo estético. En un TFG técnico, una interfaz gráfica facilita la demostración del proyecto ante un tribunal o un usuario no especializado. Permite mostrar claramente que el sistema no es un script aislado, sino una aplicación con fases, opciones y resultados interpretables.
+El valor de la GUI no es solo estético. En un Proyecto técnico, una interfaz gráfica facilita la demostración del proyecto ante un tribunal o un usuario no especializado. Permite mostrar claramente que el sistema no es un script aislado, sino una aplicación con fases, opciones y resultados interpretables.
 
 ### 13.5. Selección manual de modelos
 
@@ -82,7 +82,7 @@ El modo automático es especialmente útil cuando el usuario no sabe de antemano
 
 La métrica utilizada para seleccionar el mejor modelo es MAE, error absoluto medio. Esta métrica mide el error medio en EUR/MWh sin elevar los errores al cuadrado. Es fácil de interpretar y permite comparar modelos de forma directa. El modo `auto` también calcula otras métricas, como RMSE y R2, pero la selección principal se basa en MAE.
 
-La ventaja del modo `auto` es que ofrece una decisión basada en datos. En lugar de asumir que una red neuronal o un modelo de boosting será mejor, el sistema lo comprueba. Esta filosofía es coherente con el enfoque experimental del TFG: formular una metodología, entrenar alternativas, medir resultados y elegir según evidencia.
+La ventaja del modo `auto` es que ofrece una decisión basada en datos. En lugar de asumir que una red neuronal o un modelo de boosting será mejor, el sistema lo comprueba. Esta filosofía es coherente con el enfoque experimental del Proyecto: formular una metodología, entrenar alternativas, medir resultados y elegir según evidencia.
 
 El inconveniente es que tarda más, porque entrena varios modelos. En la interfaz gráfica esto se compensa mostrando progreso y logs por candidato. Asi el usuario puede entender que el programa no se ha bloqueado, sino que está evaluando distintas alternativas.
 
@@ -125,7 +125,7 @@ La aplicación valida que exista token cuando el usuario activa ESIOS. Si no hay
 
 El entrenamiento con ESIOS también introduce retos. Las previsiones deben estar bien alineadas temporalmente, pueden existir huecos y la calidad de la predicción renovable afecta al resultado final. Además, al entrenar con ESIOS, la inferencia debe disponer de las mismas columnas que el modelo espera. Por eso el flujo normal conserva el dataset enriquecido en `data/processed/omie_features.csv`.
 
-Desde el punto de vista del TFG, esta funcionalidad demuestra como el modelo puede evolucionar desde una aproximación pequeña, basada en calendario e histórico, hacia una aproximación más rica que incorpora variables explicativas externas.
+Desde el punto de vista del Proyecto, esta funcionalidad demuestra como el modelo puede evolucionar desde una aproximación pequeña, basada en calendario e histórico, hacia una aproximación más rica que incorpora variables explicativas externas.
 
 ### 13.9. Inferencia del siguiente periodo
 

@@ -96,7 +96,7 @@ El mínimo reciente puede ser informativo en periodos con abundante generación 
 
 El rango formado por mínimo y máximo también aporta información indirecta sobre amplitud de precios. Dos periodos pueden tener la misma media reciente, pero uno puede haber oscilado entre valores muy bajos y muy altos, mientras que otro se ha mantenido estable. Los extremos ayudan a distinguir esos contextos.
 
-Estas variables son sencillas de calcular y fáciles de interpretar. Un analista puede entender rápidamente qué significa el máximo de las últimas 24 observaciones. Esta interpretabilidad es valiosa en un TFG, porque permite explicar como se transforma la serie original antes de entrenar los modelos.
+Estas variables son sencillas de calcular y fáciles de interpretar. Un analista puede entender rápidamente qué significa el máximo de las últimas 24 observaciones. Esta interpretabilidad es valiosa en un Proyecto, porque permite explicar como se transforma la serie original antes de entrenar los modelos.
 
 Los mínimos y máximos también pueden ayudar a los modelos basados en árboles, que son buenos detectando umbrales. Por ejemplo, el modelo puede aprender reglas del tipo: si el máximo reciente supera cierto valor y la hora corresponde a una franja punta, el precio esperado puede ser más alto. Aunque el modelo no se exprese así literalmente en el documento, esa es la intuición que justifica estas variables.
 

@@ -8,9 +8,9 @@ El proyecto implementado recibe el nombre de `omie_v2_python`. Este nombre ident
 
 El objetivo de `omie_v2_python` es construir una herramienta capaz de descargar datos del mercado eléctrico español, generar variables de entrenamiento, entrenar varios modelos predictivos y realizar inferencias sobre el precio del siguiente periodo disponible. El proyecto no se limita a un cuaderno experimental, sino que se organiza como un paquete Python con comandos reutilizables, interfaz gráfica y documentación.
 
-La existencia de un nombre de proyecto concreto facilita la trazabilidad. Permite referirse a la aplicación de forma unívoca dentro del documento, en el repositorio Git y en las instrucciones de ejecución. También ayuda a diferenciar el trabajo teórico del TFG de la implementación práctica que lo acompaña.
+La existencia de un nombre de proyecto concreto facilita la trazabilidad. Permite referirse a la aplicación de forma unívoca dentro del documento, en el repositorio Git y en las instrucciones de ejecución. También ayuda a diferenciar el trabajo teórico del Proyecto de la implementación práctica que lo acompaña.
 
-En el contexto del TFG, `omie_v2_python` representa el resultado aplicado del estudio. Los capítulos anteriores describen el mercado, las fuentes de datos, la preparación y las variables; este capítulo fija la información técnica concreta del software construido.
+En el contexto del Proyecto, `omie_v2_python` representa el resultado aplicado del estudio. Los capítulos anteriores describen el mercado, las fuentes de datos, la preparación y las variables; este capítulo fija la información técnica concreta del software construido.
 
 ### 14.2. Lenguaje utilizado: Python
 
@@ -18,7 +18,7 @@ El lenguaje utilizado para implementar el proyecto es Python. La elección de Py
 
 En este proyecto, Python se utiliza para todas las fases del flujo. La descarga de datos OMIE y ESIOS se realiza mediante peticiones HTTP. El parseo y transformación de datos se apoya en pandas. El cálculo numérico utiliza numpy. El entrenamiento de modelos se realiza con scikit-learn. La serialización emplea joblib. Las gráficas de validación se generan con matplotlib. La interfaz gráfica se construye con Tkinter, disponible en el ecosistema estándar de Python.
 
-Python también facilita la organización modular. El código se divide en ficheros especializados: descarga y parseo de datos, integración con ESIOS, generación de variables, entrenamiento, inferencia e interfaz gráfica. Esta separación hace que el proyecto sea más mantenible y permite explicar cada parte en capítulos independientes del TFG.
+Python también facilita la organización modular. El código se divide en ficheros especializados: descarga y parseo de datos, integración con ESIOS, generación de variables, entrenamiento, inferencia e interfaz gráfica. Esta separación hace que el proyecto sea más mantenible y permite explicar cada parte en capítulos independientes del Proyecto.
 
 Otra ventaja de Python es su accesibilidad académica. Es un lenguaje habitual en asignaturas de programación, análisis de datos e inteligencia artificial. Esto permite que el proyecto sea comprensible para estudiantes y evaluadores, sin requerir herramientas propietarias ni entornos complejos.
 
@@ -62,7 +62,7 @@ El uso de Git y GitHub cumple varias funciones. En primer lugar, permite mantene
 
 El repositorio no debe contener datos descargados, modelos entrenados ni entornos virtuales. Estos elementos están excluidos mediante `.gitignore`. Esta práctica es adecuada porque los datos y modelos pueden regenerarse, ocupar espacio o depender de ejecuciones concretas. Lo importante es versiónar el código que permite producirlos.
 
-Desde el punto de vista documental, la existencia de un repositorio remoto refuerza la trazabilidad del TFG. No solo se entrega una memoria, sino también una implementación versiónada. Esto permite verificar que la aplicación descrita en el documento existe y puede ejecutarse siguiendo las instrucciones.
+Desde el punto de vista documental, la existencia de un repositorio remoto refuerza la trazabilidad del Proyecto. No solo se entrega una memoria, sino también una implementación versiónada. Esto permite verificar que la aplicación descrita en el documento existe y puede ejecutarse siguiendo las instrucciones.
 
 ### 14.6. Comando de interfaz gráfica: `omie-price-gui`
 
@@ -86,7 +86,7 @@ omie-price-train --start 2025-01-01 --end 2025-03-31 --model auto
 
 El comando acepta modelos como `ridge`, `mlp`, `hist_gradient_boosting` y `auto`. Cuando se utiliza `auto`, el programa entrena varios candidatos y selecciona el de menor MAE en validación temporal. Si se desea incorporar ESIOS, se añade `--include-esios` y se proporciona un token mediante `--esios-token` o mediante la variable de entorno `ESIOS_TOKEN`.
 
-Durante el entrenamiento se descargan o reutilizan datos, se generan variables, se separa entrenamiento y validación, se ajustan modelos y se calculan métricas. Al finalizar, se guarda el modelo y se genera una gráfica. Este comando es especialmente útil para documentar experimentos en el TFG, porque permite escribir exactamente qué rango y qué modelo se utilizaron.
+Durante el entrenamiento se descargan o reutilizan datos, se generan variables, se separa entrenamiento y validación, se ajustan modelos y se calculan métricas. Al finalizar, se guarda el modelo y se genera una gráfica. Este comando es especialmente útil para documentar experimentos en el Proyecto, porque permite escribir exactamente qué rango y qué modelo se utilizaron.
 
 La interfaz gráfica llama internamente a la misma lógica de entrenamiento. Esto evita duplicar comportamiento y mantiene coherencia entre usó grafico y usó por consola.
 
@@ -116,7 +116,7 @@ Además del modelo, la aplicación genera una gráfica de validación en `models
 
 Las métricas como MAE, RMSE y R2 resumen el comportamiento del modelo, pero no muestran dónde se producen los errores. Una gráfica permite observar si el modelo sigue bien la forma general de la serie, si suaviza demasiado los picos, si falla en determinados tramos o si se separa del valor real en momentos concretos.
 
-La gráfica se guarda como artefacto local, igual que el modelo. No se incluye en Git por defecto, porque depende de cada ejecución. Sin embargo, puede utilizarse en la memoria del TFG para ilustrar resultados concretos si se desea fijar un experimento.
+La gráfica se guarda como artefacto local, igual que el modelo. No se incluye en Git por defecto, porque depende de cada ejecución. Sin embargo, puede utilizarse en la memoria del Proyecto para ilustrar resultados concretos si se desea fijar un experimento.
 
 El fichero `validation_plot.png` aporta valor durante la depuración. Si las métricas parecen extrañas, la gráfica ayuda a detectar problemas de alineación temporal, predicciones planas, errores sistemáticos o comportamiento anómalo del baseline. Por tanto, no es solo una salida estética, sino una herramienta de análisis.
 

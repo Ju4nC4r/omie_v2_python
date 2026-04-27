@@ -94,7 +94,7 @@ Su desventaja es el tiempo de ejecución. Entrenar tres modelos tarda más que e
 
 Los tres modelos seleccionados cubren enfoques complementarios. Ridge representa una aproximación lineal regularizada; MLP representa una red neuronal sencilla; HistGradientBoosting representa un modelo no lineal basado en árboles. Esta diversidad permite comparar familias distintas sin convertir el proyecto en un sistema excesivamente complejo.
 
-La selección también responde al objetivo académico del TFG. No se busca solo obtener una métrica, sino entender cómo distintos enfoques se comportan ante el mismo problema. Ridge permite explicar la regularización; MLP introduce redes neuronales; boosting muestra la potencia de los modelos de árboles en datos tabulares.
+La selección también responde al objetivo académico del Proyecto. No se busca solo obtener una métrica, sino entender cómo distintos enfoques se comportan ante el mismo problema. Ridge permite explicar la regularización; MLP introduce redes neuronales; boosting muestra la potencia de los modelos de árboles en datos tabulares.
 
 Además, los tres modelos están disponibles en scikit-learn, lo que simplifica la implementación, instalación y reproducibilidad. Todos pueden entrenarse localmente sin depender de servicios externos ni GPUs.
 

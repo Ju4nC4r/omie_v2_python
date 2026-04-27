@@ -1,5 +1,7 @@
 # Resumen estructurado actualizado del hilo de desarrollo
 
+Última actualización: 2026-04-27.
+
 ## 1. Objetivo inicial del proyecto
 
 El proyecto comenzó como una aplicación sencilla para entrenar una red neuronal capaz de inferir el precio del mercado eléctrico español a partir de datos públicos de OMIE.
@@ -16,7 +18,7 @@ La idea inicial era intencionadamente pequeña: aprender de calendario, ciclos h
 - documentar el proyecto como base de un Trabajo Fin de Grado
 - guardar los avances con Git
 
-El proyecto se ha orientado tanto a la parte práctica de machine learning como a la redaccion académica del TFG.
+El proyecto se ha orientado tanto a la parte práctica de machine learning como a la redaccion académica del Proyecto.
 
 ## 2. Estructura general del proyecto
 
@@ -50,7 +52,7 @@ La estructura principal del proyecto quedó organizada así:
 └── requirements.txt
 ```
 
-El directorio `documents/` se creo para alojar la documentación del TFG y los resúmenes del desarrollo.
+El directorio `documents/` se creo para alojar la documentación del Proyecto y los resúmenes del desarrollo.
 
 ## 3. Entorno Python
 
@@ -500,7 +502,7 @@ git@github.com: Permission denied (publickey).
 
 Se explico como configurar una SSH key en macOS para GitHub.
 
-## 16. Documentación creada
+## 16. Documentación del Proyecto creada y actualizada
 
 Se creo el directorio:
 
@@ -508,7 +510,7 @@ Se creo el directorio:
 documents/
 ```
 
-Dentro se generó el índice del Documento y capítulos desarrollados en ficheros Markdown separados.
+Dentro se generó el índice del Proyecto y los capítulos desarrollados en ficheros Markdown separados.
 
 El índice actual es:
 
@@ -522,15 +524,23 @@ El fichero de índice fue renombrado desde un nombre anterior para quedar como:
 DOCUMENT-Predicion-MercadoElectrico-Indice.md
 ```
 
-También se corrigió el índice para que los apartados de segundo nivel coincidieran con los capítulos ya desarrollados. En concreto, se añadieron al capítulo 1:
+También se corrigió el índice para que los apartados de segundo nivel coincidieran con los capítulos desarrollados. En concreto, se añadieron al capítulo 1:
 
 ```text
 1.6. Contribuciones del trabajo
 1.7. Alcance y límites del resumen
-1.8. Síntesis del capitulo
+1.8. Síntesis del capítulo
 ```
 
-## 17. Capítulos del TFG desarrollados
+Posteriormente se completó el bloque documental completo del Proyecto, se corrigió ortografía en los documentos Markdown y se renombró el índice para mejorar su claridad.
+
+Además, en el directorio `documents/` existe una infografía del proyecto:
+
+```text
+Infografia-ResumenProyecto-OMIE-v2-Python.png
+```
+
+## 17. Capítulos del Proyecto desarrollados
 
 Actualmente están desarrollados y enlazados en el índice:
 
@@ -543,9 +553,19 @@ capitulo_05_estado_del_arte.md
 capitulo_06_fuentes_de_datos.md
 capitulo_07_preparacion_de_datos.md
 capitulo_08_ingenieria_de_variables.md
+capitulo_09_modelos_de_prediccion.md
+capitulo_10_metodologia_de_evaluacion.md
+capitulo_11_diseno_aplicacion_practica.md
+capitulo_12_implementacion_proyecto.md
 capitulo_13_aplicacion_practica_desarrollada.md
 capitulo_14_informacion_concreta_proyecto.md
 capitulo_15_resultados_experimentales.md
+capitulo_16_discusion.md
+capitulo_17_conclusiones.md
+capitulo_18_lineas_futuras.md
+capitulo_19_planificacion_proyecto.md
+capitulo_20_bibliografia_referencias.md
+capitulo_21_anexos.md
 ```
 
 ### 17.1. Capítulo 1. Resumen
@@ -580,36 +600,70 @@ Explica descarga OMIE, ESIOS opcional, limpieza, normalización, unión por `tim
 
 Detalla variables de calendario, codificación cíclica, retardos, medias móviles, desviaciones, mínimos, máximos, diferencias, ratios y variables renovables.
 
-### 17.9. Capítulo 13. Aplicación práctica desarrollada
+### 17.9. Capítulo 9. Modelos de predicción
+
+Explica el baseline `lag 24`, `RidgeCV`, `MLPRegressor`, `HistGradientBoostingRegressor`, el modo automático de selección, hiperparámetros, ventajas e inconvenientes.
+
+### 17.10. Capítulo 10. Metodología de evaluación
+
+Describe la validación temporal, la prevención de fuga de información, las métricas `MAE`, `RMSE` y `R2`, la comparación contra baseline, el análisis de errores y la evaluación por rangos temporales.
+
+### 17.11. Capítulo 11. Diseño de la aplicación práctica
+
+Documenta la arquitectura general del software, módulos principales, flujo de ejecución, interfaz gráfica, interfaz por consola, artefactos generados, entorno Python y control de versiones.
+
+### 17.12. Capítulo 12. Implementación del proyecto
+
+Describe la estructura de directorios, módulos de OMIE, ESIOS, generación de variables, entrenamiento, inferencia, interfaz Tkinter, serialización del modelo y generación de gráficas.
+
+### 17.13. Capítulo 13. Aplicación práctica desarrollada
 
 Describe la aplicación real, GUI, comandos, flujo de trabajo, selección de modelos, modo `auto`, OMIE, ESIOS, inferencia y comparación con valor real.
 
-### 17.10. Capítulo 14. Información concreta del proyecto implementado
+### 17.14. Capítulo 14. Información concreta del proyecto implementado
 
 Recoge la ficha técnica del proyecto: nombre, Python, `.venv`, paquete, repositorio, comandos, modelo guardado y gráfica generada.
 
-### 17.11. Capítulo 15. Resultados experimentales
+### 17.15. Capítulo 15. Resultados experimentales
 
 Documenta los resultados de enero-marzo 2025, casi todo 2025, comparación de modelos, modo `auto`, baseline e inferencia frente a OMIE.
 
-## 18. Capítulos pendientes del Documento
+### 17.16. Capítulo 16. Discusión
 
-En el índice siguen pendientes:
+Interpreta los resultados, la influencia de la cantidad de histórico, el impacto esperado de variables renovables, limitaciones, riesgos de sobreajuste y robustez ante datos ausentes.
 
-```text
-9. Modelos de predicción
-10. Metodología de evaluación
-11. Diseño de la aplicación práctica
-12. Implementación del proyecto
-16. Discusión
-17. Conclusiones
-18. Líneas futuras
-19. Planificación del proyecto
-20. Bibliografía y referencias
-21. Anexos
-```
+### 17.17. Capítulo 17. Conclusiones
 
-Los capítulos 13, 14 y 15 se desarrollaron antes que 9-12 porque el usuario lo solicito explícitamente.
+Resume el cumplimiento de objetivos, principales aportaciones, conclusiones técnicas, conclusiones sobre el mercado eléctrico y valor de la aplicación práctica.
+
+### 17.18. Capítulo 18. Líneas futuras
+
+Propone mejoras como demanda prevista, meteorología, festivos, predicción del día completo, backtesting mensual, modelos específicos de series temporales, optimización de hiperparámetros y despliegue web.
+
+### 17.19. Capítulo 19. Planificación del proyecto
+
+Recoge fases del desarrollo, cronograma estimado, herramientas utilizadas, riesgos identificados y gestión del repositorio.
+
+### 17.20. Capítulo 20. Bibliografía y referencias
+
+Agrupa referencias a OMIE, ESIOS/REE, scikit-learn, pandas, NumPy, matplotlib, joblib, Tkinter, Git, GitHub y literatura relacionada.
+
+### 17.21. Capítulo 21. Anexos
+
+Incluye comandos, estructura de directorios, ejemplos de ejecución, artefactos generados, fragmentos de código, configuración de entorno, Git y posibles capturas.
+
+## 18. Estado de capítulos del Proyecto
+
+Ya no quedan capítulos pendientes en el índice principal. Los capítulos 1 a 21 están desarrollados y enlazados.
+
+El estado documental actual es de revisión y cierre:
+
+- revisar coherencia global entre capítulos
+- unificar terminología y estilo académico
+- completar o normalizar citas y bibliografía
+- añadir figuras, tablas, capturas y diagramas cuando proceda
+- revisar que los anexos incluyan comandos y evidencias útiles
+- preparar una versión final exportable si se necesita entregar en PDF o DOCX
 
 ## 19. Commits principales
 
@@ -625,26 +679,35 @@ d3f6c88 Silence prediction CPU warning
 0747216 Add optional ESIOS renewable forecasts
 09a9f8c Expand ESIOS usage documentation
 f729fc1 Add documentation directory
-559175a Add TFG outline document
-c06ea63 Draft TFG chapter 1 summary
-b55effe Link TFG index to chapter files
+559175a Add Proyecto outline document
+c06ea63 Draft Proyecto chapter 1 summary
+b55effe Link Proyecto index to chapter files
 1643c89 Add structured development thread summary
-ff698a3 Draft TFG chapter 2 introduction
-86898a1 Draft TFG chapter 3 objectives
-50bda23 Rename TFG index document
-1d5d185 Draft TFG chapter 4 theoretical framework
-d186d3e Draft TFG chapter 5 state of the art
-71efa11 Draft TFG chapter 6 data sources
-7f00007 Align TFG index with developed chapters
-f069611 Draft TFG chapter 7 data preparation
-449201f Draft TFG chapter 8 feature engineering
-91082bc Draft TFG chapter 13 practical application
-a3950a9 Draft TFG chapters 14 and 15
+ff698a3 Draft Proyecto chapter 2 introduction
+86898a1 Draft Proyecto chapter 3 objectives
+50bda23 Rename Proyecto index document
+1d5d185 Draft Proyecto chapter 4 theoretical framework
+d186d3e Draft Proyecto chapter 5 state of the art
+71efa11 Draft Proyecto chapter 6 data sources
+7f00007 Align Proyecto index with developed chapters
+f069611 Draft Proyecto chapter 7 data preparation
+449201f Draft Proyecto chapter 8 feature engineering
+91082bc Draft Proyecto chapter 13 practical application
+a3950a9 Draft Proyecto chapters 14 and 15
+8a8627c Update development thread summary
+3af7e45 Draft Proyecto chapters 9 to 12
+5692062 Draft Proyecto chapters 16 to 18
+315c043 Draft final Proyecto chapters
+b4bccc8 -Se extracción del projecto
+2c96ce0 Corrige ortografia en documentos Markdown
+71cc381 Renombra indice de documentacion
+ddc8d42 Se corrige el título
+40ca27f Revisión de ortografia
 ```
 
 ## 20. Problemas encontrados
 
-### 20.1. Autenticacion GitHub
+### 20.1. Autenticación GitHub
 
 Los intentos de `git push` fallaron por falta de clave SSH autorizada en GitHub.
 
@@ -681,13 +744,11 @@ Esto afecta a la interpretación de retardos como `lag 24`, que en horario equiv
 
 La predicción para `2026-01-01 00:00` infraestimo el valor real. Se identifico la necesidad de incorporar festivos, demanda, meteorología y otras variables externas.
 
-## 21. Proximos pasos sugeridos
+## 21. Próximos pasos sugeridos
 
 Pasos técnicos:
 
 - configurar correctamente la SSH key de GitHub y subir el repositorio
-- desarrollar capítulos 9, 10, 11 y 12 para completar la parte metodológica/técnica
-- desarrollar capítulos 16, 17 y 18 para discusión, conclusiones y líneas futuras
 - añadir festivos nacionales y autonómicos como variables
 - incorporar demanda prevista
 - incorporar meteorología
@@ -699,10 +760,11 @@ Pasos técnicos:
 Pasos documentales:
 
 - revisar estilo global de todos los capítulos
-- unificar terminologia
+- unificar terminología
 - completar bibliografía
-- añadir figuras, tablas y díagramás
+- añadir figuras, tablas y diagramas
 - preparar anexos con comandos, estructura del proyecto y capturas de la GUI
+- revisar el resumen del hilo cuando se realicen nuevos cambios importantes
 
 ## 22. Estado actual resumido
 
@@ -718,8 +780,10 @@ El proyecto ya cuenta con:
 - inferencia
 - README completo
 - repositorio Git con commits
-- documentación TFG en `documents/`
-- capítulos 1, 2, 3, 4, 5, 6, 7, 8, 13, 14 y 15 desarrollados
-- índice actualizado con enlaces a los capítulos desarrollados
+- documentación Proyecto en `documents/`
+- capítulos 1 a 21 desarrollados
+- índice actualizado con enlaces a todos los capítulos desarrollados
+- capítulos finales de discusión, conclusiones, líneas futuras, planificación, bibliografía y anexos
+- infografía resumen del proyecto en `documents/`
 
-El siguiente bloque natural de trabajo sería desarrollar los capítulos 9, 10, 11 y 12 para cerrar el hueco entre la ingeniería de variables y la aplicación práctica.
+El siguiente bloque natural de trabajo ya no es redactar capítulos pendientes, sino cerrar la calidad final del material: revisión de estilo, coherencia, bibliografía, figuras, anexos, posible exportación a formato entregable y subida definitiva del repositorio a GitHub cuando la autenticación SSH esté resuelta.

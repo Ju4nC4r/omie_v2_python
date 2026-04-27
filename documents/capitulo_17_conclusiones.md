@@ -10,7 +10,7 @@ Se ha creado un proyecto Python funcional, con entorno virtual, estructura modul
 
 También se ha cumplido el objetivo de comparar varios modelos. Aunque la idea inicial se centraba en una red neuronal sencilla, el proyecto evolucióno para incluir Ridge, MLP, HistGradientBoosting y un modo automático de selección. Esta ampliación mejora el valor académico del trabajo porque permite comparar enfoques en igualdad de condiciones.
 
-La documentación también se ha desarrollado de forma amplia. Se ha creado un directorio `documents/`, un índice de TFG y múltiples capítulos que explican contexto, teoria, datos, preparación, modelos, evaluación, aplicación y resultados.
+La documentación también se ha desarrollado de forma amplia. Se ha creado un directorio `documents/`, un índice de Proyecto y múltiples capítulos que explican contexto, teoria, datos, preparación, modelos, evaluación, aplicación y resultados.
 
 ### 17.2. Principales aportaciones del trabajo
 
@@ -50,6 +50,6 @@ El valor principal de la aplicación es que convierte un problema teórico en un
 
 La aplicación también tiene valor como base de ampliación. Su estructura modular permite incorporar nuevas fuentes de datos, nuevos modelos y nuevas métricas. El trabajo no queda cerrado en una única versión, sino que deja un camino claro para evolucionar.
 
-Desde el punto de vista del TFG, el proyecto demuestra competencias de programación, análisis de datos, aprendizaje automático, documentación, control de versiones y reflexion crítica sobre resultados. La combinación de código y memoria aporta una visión completa del problema.
+Desde el punto de vista del Proyecto, el proyecto demuestra competencias de programación, análisis de datos, aprendizaje automático, documentación, control de versiones y reflexion crítica sobre resultados. La combinación de código y memoria aporta una visión completa del problema.
 
 En conclusión, el trabajo cumple su propósito: desarrollar y documentar una aplicación práctica para la predicción del precio eléctrico español, mostrando tanto sus posibilidades como sus limitaciones.

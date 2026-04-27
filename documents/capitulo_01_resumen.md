@@ -20,7 +20,7 @@ La relevancia de este estudio se justifica también por la creciente digitalizac
 
 El mercado eléctrico, además, presenta una dificultad adicional: sus precios no evolucionan de manera suave ni completamente predecible. Pueden aparecer precios muy bajos en situaciones de exceso de oferta renovable, precios elevados por tensiónes de demanda o combustible, y comportamientos atípicos durante festivos, fines de semana o episodios meteorológicos extremos. Por tanto, el objetivo no es encontrar una formula determinista, sino construir modelos capaces de aprender patrones útiles a partir de los datos disponibles.
 
-Este contexto convierte la predicción del precio eléctrico en un problema especialmente adecuado para un TFG de carácter técnico. Permite trabajar con datos reales, construir un sistema software completo y evaluar los resultados de forma cuantitativa. Al mismo tiempo, obliga a reflexionar sobre las limitaciones de los modelos, la importancia de la calidad de los datos y la necesidad de evitar interpretaciones excesivamente optimistas de las métricas.
+Este contexto convierte la predicción del precio eléctrico en un problema especialmente adecuado para un Proyecto de carácter técnico. Permite trabajar con datos reales, construir un sistema software completo y evaluar los resultados de forma cuantitativa. Al mismo tiempo, obliga a reflexionar sobre las limitaciones de los modelos, la importancia de la calidad de los datos y la necesidad de evitar interpretaciones excesivamente optimistas de las métricas.
 
 ### 1.2. Objetivo principal del trabajo
 
@@ -34,7 +34,7 @@ El trabajo también busca analizar la utilidad de incorporar variables externas 
 
 Otro objetivo importante es comparar modelos de diferente naturaleza. No se pretende asumir de antemano que una red neuronal será necesariamente superior, sino evaluar varios enfoques bajo una misma metodología. Por este motivo, la aplicación permite entrenar una regresión Ridge, una red neuronal multicapa y un modelo de gradient boosting. Además, incluye un modo automático que selecciona el modelo con mejor comportamiento según la métrica MAE en validación temporal.
 
-La inclusión de una aplicación práctica persigue acercar el trabajo a un caso de usó real. El usuario puede elegir fechas, descargar datos, preparar el dataset, seleccionar modelo, entrenar, evaluar y generar una predicción. Esta aplicación constituye el núcleo experimental del TFG y sirve como base para analizar los resultados obtenidos.
+La inclusión de una aplicación práctica persigue acercar el trabajo a un caso de usó real. El usuario puede elegir fechas, descargar datos, preparar el dataset, seleccionar modelo, entrenar, evaluar y generar una predicción. Esta aplicación constituye el núcleo experimental del Proyecto y sirve como base para analizar los resultados obtenidos.
 
 Como objetivo transversal, se busca que el sistema sea modular. Cada parte del flujo se implementa en un módulo independiente: descarga de datos, integración con ESIOS, generación de variables, entrenamiento, inferencia e interfaz gráfica. Esta separación facilita la mantenibilidad y permite ampliar el proyecto en el futuro. Por ejemplo, se podrían incorporar nuevas fuentes de datos sin modificar por completo el entrenamiento, o se podrían añadir nuevos modelos sin alterar el módulo de descarga.
 
@@ -88,7 +88,7 @@ Se espera que los resultados permitan extraer varias conclusiones. La primera es
 
 El trabajo también puede mostrar que no existe un único modelo universalmente superior. En una etapa inicial, una regresión regularizada puede comportarse mejor que una red neuronal, especialmente si el dataset no es muy grande. Con más datos, un modelo de boosting puede capturar patrones más complejos. Esta observación es importante porque evita una conclusión simplista basada en la idea de que los modelos más complejos son siempre mejores.
 
-Otro resultado esperado es identificar errores concretos y analizarlos. Por ejemplo, una predicción para un festivo como el 1 de enero puede presentar desviaciones significativas si el modelo no dispone de variables que indiquen festivos o cambios especiales de demanda. Estos casos son valiosos porque revelan limitaciones del enfoque y orientan futuras mejoras. En un TFG, el análisis de errores puede ser tan importante como la mejora de las métricas globales.
+Otro resultado esperado es identificar errores concretos y analizarlos. Por ejemplo, una predicción para un festivo como el 1 de enero puede presentar desviaciones significativas si el modelo no dispone de variables que indiquen festivos o cambios especiales de demanda. Estos casos son valiosos porque revelan limitaciones del enfoque y orientan futuras mejoras. En un Proyecto, el análisis de errores puede ser tan importante como la mejora de las métricas globales.
 
 En términos de aplicación, se espera que el usuario pueda ejecutar el proyecto completo sin modificar código fuente. La interfaz gráfica debe permitir realizar las operaciones principales, mientras que la interfaz por consola debe facilitar experimentos repetibles. Esta doble modalidad permite que el proyecto sea útil tanto para demostraciones visuales como para ejecuciones técnicas controladas.
 
@@ -98,7 +98,7 @@ La aplicación práctica desarrollada recibe el nombre de `omie_v2_python`. Se t
 
 El proyecto se ejecuta dentro de un entorno virtual `.venv`, lo que permite aislar dependencias y facilitar la instalación. Las dependencias principales son `pandas`, `numpy`, `requests`, `scikit-learn`, `joblib` y `matplotlib`. Estas bibliotecas permiten cubrir las necesidades principales del flujo: manipulación de datos, descarga HTTP, entrenamiento de modelos, serialización y visualización.
 
-La estructura del proyecto separa claramente los datos, los modelos, el código fuente y la documentación. Los ficheros descargados de OMIE se almacenan en `data/raw/`, mientras que los datasets procesados se guardan en `data/processed/`. Los modelos entrenados y las gráficas de validación se almacenan en `models/`. La documentación se centraliza en el directorio `documents/`, donde se incluyen documentos relacionados con el TFG y la descripción del sistema.
+La estructura del proyecto separa claramente los datos, los modelos, el código fuente y la documentación. Los ficheros descargados de OMIE se almacenan en `data/raw/`, mientras que los datasets procesados se guardan en `data/processed/`. Los modelos entrenados y las gráficas de validación se almacenan en `models/`. La documentación se centraliza en el directorio `documents/`, donde se incluyen documentos relacionados con el Proyecto y la descripción del sistema.
 
 Desde consola, la aplicación ofrece comandos como `omie-price-train`, `omie-price-predict` y `omie-price-gui`. El primero permite entrenar modelos indicando fecha inicial, fecha final y modelo seleccionado. El segundo carga el modelo guardado y realiza inferencia. El tercero abre una interfaz gráfica desarrollada con Tkinter.
 
@@ -108,11 +108,11 @@ La integración con ESIOS se ha implementado de manera opcional. Si el usuario d
 
 La aplicación también genera una gráfica de validación en `models/validation_plot.png`. Esta gráfica compara el precio real, la predicción del modelo y la baseline `lag 24`. De este modo, el usuario puede observar visualmente si el modelo sigue la tendencia del mercado y si mejora respecto a una estrategia simple basada en el precio del día anterior.
 
-En conjunto, la aplicación práctica demuestra un flujo completo de ciencia de datos aplicado al mercado eléctrico: adquisición de datos, procesamiento, ingeniería de variables, entrenamiento, validación, selección de modelo, inferencia y presentación de resultados. Esta herramienta constituye la base experimental del TFG y permite desarrollar futuros capítulos con resultados cuantitativos, análisis de errores y propuestas de mejora.
+En conjunto, la aplicación práctica demuestra un flujo completo de ciencia de datos aplicado al mercado eléctrico: adquisición de datos, procesamiento, ingeniería de variables, entrenamiento, validación, selección de modelo, inferencia y presentación de resultados. Esta herramienta constituye la base experimental del Proyecto y permite desarrollar futuros capítulos con resultados cuantitativos, análisis de errores y propuestas de mejora.
 
 La aplicación ha sido disenada para que el usuario pueda comprender el proceso por fases. La fase de extracción se encarga de obtener los datos brutos. La fase de preparación transforma esos datos en un formato apto para entrenamiento. La fase de entrenamiento compara modelos o ejecuta el modelo seleccionado. La fase de inferencia genera una predicción. Esta división facilita la depuración y permite explicar con claridad qué ocurre en cada etapa.
 
-El proyecto también incorpora control de versiones mediante Git. Esto permite registrar la evolución del código y de la documentación. Durante el desarrollo se han creado commits para hitos concretos, como la incorporación de la interfaz gráfica, la selección de modelos, la integración de ESIOS y la ampliación de la documentación. Esta práctica es relevante en un TFG técnico, ya que refleja una metodología de trabajo ordenada y trazable.
+El proyecto también incorpora control de versiones mediante Git. Esto permite registrar la evolución del código y de la documentación. Durante el desarrollo se han creado commits para hitos concretos, como la incorporación de la interfaz gráfica, la selección de modelos, la integración de ESIOS y la ampliación de la documentación. Esta práctica es relevante en un Proyecto técnico, ya que refleja una metodología de trabajo ordenada y trazable.
 
 Aunque la aplicación práctica ya permite entrenar modelos y realizar inferencias, se considera un punto de partida. La arquitectura propuesta permite incorporar nuevas funcionalidades, como predicción de todo el día siguiente, backtesting mensual, optimización automática de hiperparámetros o inclusión de variables meteorológicas. Estas mejoras se recogen en las líneas futuras del trabajo.
 
@@ -124,9 +124,9 @@ La segunda contribución es la comparación de modelos de distinta naturaleza ba
 
 La tercera contribución es la integración opcional de datos de generación renovable. La inclusión de previsiones eólicas y solares conecta el modelo con factores físicos del sistema eléctrico, no solo con patrones estadísticos del precio pasado. Esta extensión aproxima el proyecto a un enfoque más realista, ya que la generación renovable es una de las variables más influyentes en el mercado actual.
 
-La cuarta contribución es la creación de una interfaz gráfica. Aunque el trabajo podría haberse limitado a scripts de consola, la GUI permite visualizar el flujo de manera más accesible. Esto resulta útil tanto para usuarios sin experiencia en consola como para la defensa del TFG, donde una demostración visual puede ayudar a explicar el funcionamiento del sistema.
+La cuarta contribución es la creación de una interfaz gráfica. Aunque el trabajo podría haberse limitado a scripts de consola, la GUI permite visualizar el flujo de manera más accesible. Esto resulta útil tanto para usuarios sin experiencia en consola como para la defensa del Proyecto, donde una demostración visual puede ayudar a explicar el funcionamiento del sistema.
 
-La quinta contribución es la documentación estructurada del proyecto. El repositorio incluye un README detallado y un directorio específico para documentos académicos. Esta documentación facilita que otra persona pueda instalar, ejecutar y comprender el sistema. Además, proporciona la base para desarrollar los capítulos posteriores del TFG.
+La quinta contribución es la documentación estructurada del proyecto. El repositorio incluye un README detallado y un directorio específico para documentos académicos. Esta documentación facilita que otra persona pueda instalar, ejecutar y comprender el sistema. Además, proporciona la base para desarrollar los capítulos posteriores del Proyecto.
 
 ### 1.7. Alcance y límites del resumen
 
@@ -146,4 +146,4 @@ El proyecto desarrollado combina modelos lineales, redes neuronales y modelos de
 
 La aplicación práctica `omie_v2_python` materializa esta metodología en un software ejecutable. Permite descargar datos, preparar el dataset, entrenar modelos, comparar métricas y realizar inferencia. Su interfaz gráfica facilita la demostración del flujo completo, mientras que los comandos de consola permiten reproducir experimentos de forma controlada.
 
-En definitiva, este TFG propone una aproximación aplicada a la predicción del mercado eléctrico español, integrando conocimientos de energía, programación, análisis de datos y aprendizaje automático. El trabajo sienta las bases para una evaluación experimental más profunda y para futuras ampliaciones orientadas a mejorar la precisión y utilidad del sistema.
+En definitiva, este Proyecto propone una aproximación aplicada a la predicción del mercado eléctrico español, integrando conocimientos de energía, programación, análisis de datos y aprendizaje automático. El trabajo sienta las bases para una evaluación experimental más profunda y para futuras ampliaciones orientadas a mejorar la precisión y utilidad del sistema.

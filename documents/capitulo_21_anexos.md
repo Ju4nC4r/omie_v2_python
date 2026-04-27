@@ -236,7 +236,7 @@ Error relativo: 15.90 %
 
 ### 21.8. Capturas de pantalla de la aplicación
 
-En una versión final del TFG pueden incorporarse capturas de:
+En una versión final del Proyecto pueden incorporarse capturas de:
 
 - ventana principal de la GUI
 - selector de modelo
