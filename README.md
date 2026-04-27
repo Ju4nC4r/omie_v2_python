@@ -1,5 +1,7 @@
 # ⚡ OMIE v2 Python - Predicción del precio eléctrico español
 
+![Infografía resumen del proyecto](documents/Infografia-ResumenProyecto-OMIE-v2-Python.png)
+
 Proyecto en Python para **descargar datos públicos de OMIE**, preparar una serie temporal supervisada y entrenar modelos capaces de estimar el precio del mercado diario eléctrico español.
 
 Incluye:
