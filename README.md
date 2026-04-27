@@ -1,4 +1,4 @@
-# ⚡ OMIE v2 Python - Predicción del precio eléctrico español
+# ⚡ OMIE v2 Python - Predicción del precio del mercado eléctrico Español
 
 ![Infografía resumen del proyecto](documents/Infografia-ResumenProyecto-OMIE-v2-Python.png)
 
